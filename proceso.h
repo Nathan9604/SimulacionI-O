@@ -4,6 +4,9 @@
 
 class proceso
 {
+protected:
+    float tiempoCola;
+    float entradaCola;
 public:
     proceso();
 };

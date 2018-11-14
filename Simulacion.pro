@@ -27,12 +27,14 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         controller.cpp \
-        simulacion.cpp
+        simulacion.cpp \
+    proceso.cpp
 
 HEADERS += \
         mainwindow.h \
         controller.h \
-        simulacion.h
+        simulacion.h \
+    proceso.h
 
 FORMS += \
         mainwindow.ui

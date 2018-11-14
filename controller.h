@@ -4,8 +4,10 @@
 #include <QAbstractListModel>
 #include <QVector>
 #include <QtCore>
+#include <QQueue>
 
 #include "simulacion.h"
+#include "proceso.h"
 
 class controller : public QAbstractListModel
 {
@@ -15,6 +17,9 @@ class controller : public QAbstractListModel
         QVector<QString> resultados;
         QVector<Simulacion *> sims;
         Simulacion *sim;
+        QQueue<proceso> colaListos;
+        QQueue<proceso> colaDispositivos;
+
 
     public:
         explicit controller(QObject *parent = nullptr);
