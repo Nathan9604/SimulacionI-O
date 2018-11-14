@@ -6,12 +6,12 @@ proceso::proceso()
     entradaCola = 0;
 }
 
-proceso::sumarTiempoCola(float cantidad)
+void proceso::sumarTiempoCola(float cantidad)
 {
     tiempoCola += cantidad;
 }
 
-proceso::actualizarEntradaCola(float reloj)
+void proceso::actualizarEntradaCola(float reloj)
 {
     entradaCola = reloj;
 }
