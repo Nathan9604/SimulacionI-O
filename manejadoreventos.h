@@ -38,7 +38,8 @@ public:
 
     int obtenerProximoTiempo();
 
-    void evento1(proceso *p);
-
+    void evento1(proceso * p);
+	void vaciarSalidaIO();
+	void vaciarSalidaCpu();
 };
 #endif // _MANEJADOREVENTOS_H

@@ -13,6 +13,19 @@ ManejadorEventos::~ManejadorEventos()
 {
 
 }
+
+void ManejadorEventos::vaciarSalidaIO()
+{
+	 proximaSalidaIO = INFINITO;
+	 proximoSalirIO = 0;
+}
+
+void ManejadorEventos::vaciarSalidaCpu()
+{
+	proximaSalidaCpu = INFINITO;
+	proximoSalirCpu = 0;
+}
+
 int ManejadorEventos::obtenerProximoTiempo()
 {
     int tiempo = 1;
