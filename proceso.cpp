@@ -6,6 +6,8 @@ proceso::proceso()
     entradaCola = 0;
 }
 
+proceso::~proceso(){}
+
 void proceso::sumarTiempoCola(float cantidad)
 {
     tiempoCola += cantidad;

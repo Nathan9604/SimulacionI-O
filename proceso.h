@@ -9,6 +9,7 @@ protected:
     float entradaCola;
 public:
     proceso();
+    ~proceso();
     void sumarTiempoCola(float cantidad);
     void actualizarEntradaCola(float reloj);
 };

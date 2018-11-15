@@ -92,3 +92,15 @@ proceso * ManejadorEventos::obtenerProximoProcesoCPU()
     return proximoSalirCpu;
 }
 
+void ManejadorEventos::evento1(proceso *p)
+{
+    if(CPULibre == true){
+        CPULIbre == false;
+        proximoProcesoCpu = p;
+    }
+    else{
+        colaListosCPU.push_back(p);
+        p->actualizarEntradaCola(reloj);
+    }
+}
+

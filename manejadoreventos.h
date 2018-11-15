@@ -1,4 +1,5 @@
 #include "proceso.h"
+#include <QQueue>
 
 #ifndef MANEJADOREVENTOS_H
 #define MANEJADOREVENTOS_H
@@ -8,13 +9,16 @@
 class ManejadorEventos
 {
 protected:
-   proceso * proximoSalirIO;
-   proceso * proximoSalirCpu;
+    proceso * proximoSalirIO;
+    proceso * proximoSalirCpu;
+    proceso *proximoProcesoCpu;
 
-   int proximoArribo;
-   int proximaSalidaIO;
-   int proximaSalidaCpu;
-
+    int proximoArribo;
+    int proximaSalidaIO;
+    int proximaSalidaCpu;
+    bool CPULibre;
+    QQueue<proceso> colaListosCPU;
+    QQueue<proceso> colaListosDispositivos;
 
 
 public:
@@ -33,6 +37,8 @@ public:
     proceso * obtenerProximoProcesoCPU();
 
     int obtenerProximoTiempo();
+
+    void evento1(proceso *p);
 
 };
 #endif // _MANEJADOREVENTOS_H
