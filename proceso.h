@@ -9,8 +9,8 @@ protected:
     float entradaCola;
 public:
     proceso();
-    sumarTiempoCola(float cantidad);
-    actualizarEntradaCola(float reloj);
+    void sumarTiempoCola(float cantidad);
+    void actualizarEntradaCola(float reloj);
 };
 
 #endif // PROCESO_H

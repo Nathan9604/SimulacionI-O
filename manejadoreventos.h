@@ -22,11 +22,9 @@ public:
     ~ManejadorEventos();
 
     void indicarProximoArribo(int);
-    void indicarProximaSalidaIO(int);
-    void indicarProximaSalidaCpu(int);
+    void indicarProximaSalidaIO(int, proceso *);
+    void indicarProximaSalidaCpu(int, proceso * );
 
-    void indicarProximoProcesoIO(proceso *);
-    void indicarProximoProcesoCPU(proceso *);
 
     //Retorna evento 1, 2, 3 o -1 para indicar que no hay ningun evento a ocurrir
     int ObtenerEventoMasProximo();

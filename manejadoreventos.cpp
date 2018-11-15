@@ -43,25 +43,19 @@ void ManejadorEventos::indicarProximoArribo(int p)
 {
     proximoArribo = p;
 }
-void ManejadorEventos::indicarProximaSalidaIO(int p)
+void ManejadorEventos::indicarProximaSalidaIO(int p, proceso * pid)
 {
     proximaSalidaIO = p;
+    proximoSalirIO = pid;
 
 }
-void ManejadorEventos::indicarProximaSalidaCpu(int p )
+void ManejadorEventos::indicarProximaSalidaCpu(int p, proceso * pid )
 {
     proximaSalidaCpu = p;
+    proximoSalirCpu = pid;
 }
 
-void ManejadorEventos::indicarProximoProcesoIO(proceso * p)
-{
-    proximoSalirIO = p;
-}
-void ManejadorEventos::indicarProximoProcesoCPU(proceso * p)
-{
-    proximoSalirCpu = p;
 
-}
 
 //Retorna evento 1, 2, 3 o -1 para indicar que no hay ningun evento a ocurrir
 int ManejadorEventos::ObtenerEventoMasProximo()
