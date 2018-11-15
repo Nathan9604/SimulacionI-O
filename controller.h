@@ -20,6 +20,12 @@ class controller : public QAbstractListModel
         QQueue<proceso> colaListos;
         QQueue<proceso> colaDispositivos;
 
+        //Estadisticas de todas las simulaciones. Esto no ocupa contadores ya que dichos contadores equivalen a la cantidad total de simulaciones
+        double ocupacionServidorTotal;
+        double coeficienteEficienciaTotal;
+        double tiempoPromedioUsoCpuTotal;
+        double tiempoPromedioUsoIOTotal;
+
 
     public:
         explicit controller(QObject *parent = nullptr);
