@@ -2,6 +2,7 @@
 #define SIMULACION_H
 
 #include <QtCore>
+#include "manejadoreventos.h"
 
 class Simulacion : public QThread
 {
@@ -14,6 +15,20 @@ class Simulacion : public QThread
         bool exp;       //¿Es exponencial?
         int varianza;
         int media;
+
+        //Estadisticas de la simulacion actual
+        double ocupacionServidor;
+        double coeficienteEficiencia;
+        double tiempoPromedioUsoCpu;
+        double tiempoPromedioUsoIO;
+
+        int contadorUsosCpu;
+        int contadorUsosIO;
+
+        //Utilizadas para calcular proximo valor del reloj
+        ManejadorEventos * manejadorEventos;
+
+
 
     public:
         Simulacion(int numSim, int tiemSim, int quanSim, bool expon);
