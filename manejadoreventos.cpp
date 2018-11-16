@@ -40,21 +40,21 @@ int ManejadorEventos::obtenerProximoTiempo()
 
     }
 
-    if(proximaSalidaIO != INFINITO)
-    {
-        if(proximaSalidaIO <= proximoArribo && proximaSalidaIO <= proximaSalidaCpu){
-            tiempo = proximaSalidaIO;
-            printf("io %d\n",tiempo);
-            return tiempo;
-        }
-
-    }
-
     if(proximaSalidaCpu != INFINITO)
     {
         if(proximaSalidaCpu <= proximoArribo && proximaSalidaCpu <= proximaSalidaIO){
             tiempo = proximaSalidaCpu;
             printf("cpu %d\n",tiempo);
+            return tiempo;
+        }
+
+    }
+
+    if(proximaSalidaIO != INFINITO)
+    {
+        if(proximaSalidaIO <= proximoArribo && proximaSalidaIO <= proximaSalidaCpu){
+            tiempo = proximaSalidaIO;
+            printf("io %d\n",tiempo);
             return tiempo;
         }
 
@@ -93,16 +93,16 @@ int ManejadorEventos::ObtenerEventoMasProximo()
             evento = 1;
     }
 
-    if(evento == -1 && proximaSalidaIO != INFINITO)
-    {
-        if(proximaSalidaIO <= proximoArribo && proximaSalidaIO <= proximaSalidaCpu)
-            evento = 3;
-    }
-
     if(evento == -1 && proximaSalidaCpu != INFINITO)
     {
         if(proximaSalidaCpu <= proximoArribo && proximaSalidaCpu <= proximaSalidaIO)
             evento = 2;
+    }
+
+    if(evento == -1 && proximaSalidaIO != INFINITO)
+    {
+        if(proximaSalidaIO <= proximoArribo && proximaSalidaIO <= proximaSalidaCpu)
+            evento = 3;
     }
 
     return evento;

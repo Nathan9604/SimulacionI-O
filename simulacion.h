@@ -41,6 +41,7 @@ class Simulacion : public QThread
         void estadisticasSim();
         void evento1();
         void evento2();
+        void evento3();
 
     signals:
         void actReloj(int reloj);

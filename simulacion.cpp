@@ -22,6 +22,9 @@ Simulacion::Simulacion(int numSim, int tiemSim, int quanSim, bool expon)
     tiempoPromedioUsoCpu = 0;
     tiempoPromedioUsoIO = 0;
 
+    CPULibre = true;
+    IOLibre = true;
+
     contadorUsosCpu = 0;
     contadorUsosIO = 0;
 
@@ -36,28 +39,26 @@ void Simulacion::correrSim(){
     // Ejemplo para verlo correr.
     reloj = 0;
     evento1();
-    while(reloj <= tiemSims){
+    do{
 
         int evento = manejadorEventos->ObtenerEventoMasProximo();
-//printf("evento %d y reloj %d\n",evento,reloj);
+        printf("evento %d y reloj %d\n",evento,reloj);
         switch(evento)
         {
             case 1:
                 evento1();
                 break;
             case 2:
-                //evento2();
-                printf("hola");
-                manejadorEventos->vaciarSalidaCpu();
+                evento2();
                 break;
             case 3:
-                manejadorEventos->vaciarSalidaIO();
+                evento3();
                 break;
         }
         emit this->actReloj(reloj);
         reloj = manejadorEventos->obtenerProximoTiempo();
-
     }
+    while(reloj <= tiemSims);
 }
 
 void Simulacion::evento1()
@@ -78,7 +79,13 @@ void Simulacion::evento1()
 
 void Simulacion::evento2(){
     proceso *p = new proceso();
+    manejadorEventos->indicarProximaSalidaCpu( (reloj + quanSims/2) ,p);
     manejadorEventos->indicarProximaSalidaIO(reloj + 5,p);
+}
+
+void Simulacion::evento3(){
+    proceso *p = new proceso();
+    manejadorEventos->indicarProximaSalidaIO(reloj + 10,p);
 }
 
 void Simulacion::estadisticasSim(){
