@@ -1,7 +1,11 @@
 #ifndef SIMULACION_H
 #define SIMULACION_H
 
+#include <math.h>
 #include <QtCore>
+#include <random>
+
+
 #include "manejadoreventos.h"
 
 class Simulacion : public QThread
@@ -10,7 +14,7 @@ class Simulacion : public QThread
 
     protected:
         int numSims;
-        int tiemSims;
+        float tiemSims;
         int quanSims;
         bool exp;       //¿Es exponencial?
         int varianza;
@@ -28,7 +32,7 @@ class Simulacion : public QThread
         //Utilizadas para calcular proximo valor del reloj
         ManejadorEventos * manejadorEventos;
 
-        int reloj;
+        float reloj;
         bool CPULibre;
         bool IOLibre;
 
@@ -40,12 +44,19 @@ class Simulacion : public QThread
         Simulacion(int numSim, int tiemSim, int quanSim, bool expon);
         void correrSim();
         void estadisticasSim();
+
+        int random();
+        float distribucionExponencial(float random);
+        float distribucionUniforme(float random);
+        float distribucionNormal(float random1, float random2);
+        float distribucionIO(float random);
+
         void evento1();
         void evento2();
         void evento3();
 
     signals:
-        void actReloj(int reloj);
+        void actReloj(float reloj);
         void actEvento(int evento);
         void actCpu(bool usoCpu);
         void actIo(bool usoIo);

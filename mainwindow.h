@@ -22,7 +22,7 @@ public:
 private slots:
     void on_OkButtom_2_accepted();
     void on_OkButtom_2_rejected();
-    void actualiceReloj(int reloj);
+    void actualiceReloj(float reloj);
     void actualiceEvento(int evento);
     void actualiceCpu(bool cpuLibre);
     void actualiceIo(bool ioLibre);

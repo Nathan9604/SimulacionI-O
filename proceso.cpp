@@ -10,7 +10,7 @@ proceso::~proceso(){}
 
 void proceso::sumarTiempoCola(float cantidad)
 {
-    tiempoCola += cantidad;
+    tiempoCola += entradaCola - cantidad;
 }
 
 void proceso::actualizarEntradaCola(float reloj)

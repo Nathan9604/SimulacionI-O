@@ -3,7 +3,7 @@
 Simulacion::Simulacion(int numSim, int tiemSim, int quanSim, bool expon)
 {
     numSims = numSim;
-    tiemSims = tiemSim;
+    tiemSims = (float)tiemSim;
     quanSims = quanSim;
     exp = expon;
 
@@ -49,7 +49,7 @@ void Simulacion::correrSim(){
         emit this->actNumSal(colaSalida.size());
 
         evento = manejadorEventos->ObtenerEventoMasProximo();
-        printf("evento %d y reloj %d\n",evento,reloj);
+        printf("evento %d y reloj %9.6f\n",evento,reloj);
         switch(evento)
         {
             case 1:
@@ -85,9 +85,74 @@ void Simulacion::evento1()
 }
 
 void Simulacion::evento2(){
-    proceso *p = new proceso();
-    manejadorEventos->indicarProximaSalidaCpu( (reloj + quanSims/2) ,p);
-    manejadorEventos->indicarProximaSalidaIO(reloj + 5,p);
+    //manejadorEventos->proximoSalirCpu->sumarTiempoCola( reloj - manejadorEventos->proximoSalirCpu->entradaCola );
+
+    int siguienteEvento = random();
+
+    if(siguienteEvento < 50) siguienteEvento = 1;
+    else if (siguienteEvento >= 50 && siguienteEvento < 70) siguienteEvento = 2;
+         else siguienteEvento = 3;
+
+    switch(siguienteEvento){
+        case 1: // Va para CPU
+            if(colaListosCPU.size() > 0){
+                manejadorEventos->obtenerProximoProcesoCPU()->actualizarEntradaCola(reloj);
+                colaListosCPU.append(manejadorEventos->obtenerProximoProcesoCPU());
+
+                emit this->actNumCola(colaListosCPU.size());
+
+                manejadorEventos->indicarProximaSalidaCpu(reloj + (quanSims/2) + distribucionUniforme( (random()/100) ), colaListosCPU.dequeue() );
+                manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCola(reloj);
+                //manejadorEventos->obtenerProximoProcesoCPU()->actualizarEntradaCpu(reloj);
+            }
+            else{
+                manejadorEventos->indicarProximaSalidaCpu(reloj + (quanSims/2) + distribucionUniforme( (random()/100) ), manejadorEventos->obtenerProximoProcesoCPU() );
+                //manejadorEventos->obtenerProximoProcesoCPU()->actualizarEntradaCpu(reloj);
+            }
+            break;
+
+        case 2: // Va para IO
+            if(colaListosCPU.size() > 0){
+                manejadorEventos->indicarProximaSalidaCpu(reloj + (quanSims/2) + distribucionUniforme( (random()/100) ), colaListosCPU.dequeue() );
+                emit this->actNumCola(colaListosCPU.size());
+
+                manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCola(reloj);
+                //manejadorEventos->obtenerProximoProcesoCPU()->actualizarEntradaCpu(reloj);
+            }
+            else{
+                CPULibre = true;
+                emit this->actCpu(CPULibre);
+            }
+
+            //manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCpu(reloj);
+
+            if(IOLibre == true){
+                IOLibre = false;
+                manejadorEventos->indicarProximaSalidaIO(distribucionIO( (random()/100) ), manejadorEventos->obtenerProximoProcesoCPU());
+            }
+            else{
+                manejadorEventos->obtenerProximoProcesoCPU()->actualizarEntradaCola(reloj);
+                colaListosDispositivos.enqueue(manejadorEventos->obtenerProximoProcesoCPU());
+                //emit this->actNumColaDis( colaListosDispositivos.size() );
+            }
+            break;
+
+        case 3: // Va para Salida
+            if(colaListosCPU.size() > 0){
+                manejadorEventos->indicarProximaSalidaCpu(reloj + (quanSims/2) + distribucionUniforme( (random()/100) ), colaListosCPU.dequeue() );
+                emit this->actNumCola(colaListosCPU.size());
+
+                manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCola(reloj);
+                //manejadorEventos->obtenerProximoProcesoCPU()->actualizarEntradaCpu(reloj);
+            }
+            else{
+                CPULibre = true;
+            }
+            //manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCpu(reloj);
+            colaSalida.enqueue(manejadorEventos->obtenerProximoProcesoCPU());
+            break;
+    }
+
 }
 
 void Simulacion::evento3(){
@@ -113,4 +178,38 @@ void Simulacion::estadisticasSim(){
     //tiempoPromedioUsoIOTotal += tiempoPromedioUsoIO;
 
 
+}
+
+int Simulacion::random()
+{
+    std::default_random_engine generador;
+    std::uniform_int_distribution<int> randomizer(0,99);
+
+    return randomizer(generador);
+}
+
+float Simulacion::distribucionExponencial(float random)
+{
+    return ( (- log(1-random)) / media);
+}
+
+//( random * ( quanSims/2 - 0) + 0 ), a = 0 y b = quanSims/2
+//( random * (quanSims/2) )
+float Simulacion::distribucionUniforme(float random)
+{
+    return ( random * (quanSims/2) );
+}
+
+float Simulacion::distribucionNormal(float random1, float random2)
+{
+    float resultado = ( (-2 * log(random1)) * 1/2 * (cos(2 * M_PI * random2)) );
+
+    if(resultado > 0) return resultado;
+
+    return ( (-2 * log(random1)) * 1/2 * (sin(2 * M_PI * random2)) );
+}
+
+float Simulacion::distribucionIO(float random)
+{
+    return 20 * sqrt(3 * random + 1);
 }

@@ -12,21 +12,21 @@ protected:
     proceso * proximoSalirIO;
     proceso * proximoSalirCpu;
 
-    int proximoArribo;
-    int proximaSalidaIO;
-    int proximaSalidaCpu;
+    float proximoArribo;
+    float proximaSalidaIO;
+    float proximaSalidaCpu;
 
 public:
     ManejadorEventos();
     ~ManejadorEventos();
 
-    void indicarProximoArribo(int);
-    void indicarProximaSalidaIO(int, proceso *);
-    void indicarProximaSalidaCpu(int, proceso * );
+    void indicarProximoArribo(float);
+    void indicarProximaSalidaIO(float, proceso *);
+    void indicarProximaSalidaCpu(float, proceso * );
 
 
     //Retorna evento 1, 2, 3 o -1 para indicar que no hay ningun evento a ocurrir
-    int ObtenerEventoMasProximo();
+    float ObtenerEventoMasProximo();
 
     proceso * obtenerProximoProcesoIO();
     proceso * obtenerProximoProcesoCPU();

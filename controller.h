@@ -40,7 +40,7 @@ class controller : public QAbstractListModel
         virtual void fetchMore(const QModelIndex &parent) override;
 
     signals:
-        void actualiceReloj(int reloj);
+        void actualiceReloj(float reloj);
         void actualiceEvento(int evento);
         void actualiceCpu(bool usoCpu);
         void actualiceIo(bool usoIo);
@@ -48,7 +48,7 @@ class controller : public QAbstractListModel
         void actualiceNumSal(int numSal);
 
     protected slots:
-        void actReloj(int reloj);
+        void actReloj(float reloj);
         void actEvento(int evento);
         void actCpu(bool usoCpu);
         void actIo(bool usoIo);

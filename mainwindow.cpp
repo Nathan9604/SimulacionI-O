@@ -62,7 +62,7 @@ void MainWindow::on_OkButtom_2_rejected()
     ui->quanSims->setValue(1);
 }
 
-void MainWindow::actualiceReloj(int reloj){
+void MainWindow::actualiceReloj(float reloj){
     ui->reloj->setText( QString::number(reloj) );
 }
 

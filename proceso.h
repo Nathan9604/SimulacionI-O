@@ -12,6 +12,11 @@ public:
     ~proceso();
     void sumarTiempoCola(float cantidad);
     void actualizarEntradaCola(float reloj);
+
+
+    //lo mismo con io y cpu
+    /*void sumarTiempoCola(float cantidad);
+    void actualizarEntradaCola(float reloj);*/
 };
 
 #endif // PROCESO_H

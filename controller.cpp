@@ -43,7 +43,7 @@ void controller::promSims(){
     //Promedia todas las simulaciones.
 }
 
-void controller::actReloj(int reloj){
+void controller::actReloj(float reloj){
     emit this->actualiceReloj(reloj);
 }
 
