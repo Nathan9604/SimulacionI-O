@@ -24,8 +24,8 @@ private slots:
     void on_OkButtom_2_rejected();
     void actualiceReloj(int reloj);
     void actualiceEvento(int evento);
-    void actualiceCpu(bool usoCpu);
-    void actualiceIo(bool usoIo);
+    void actualiceCpu(bool cpuLibre);
+    void actualiceIo(bool ioLibre);
     void actualiceNumCola(int numCola);
     void actualiceNumSal(int numSal);
 

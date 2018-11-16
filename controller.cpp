@@ -26,11 +26,16 @@ printf("iteracion %d\n",i);
 
         //Agrega la simulación al vector de simulaciones.
         sims.append(sim);
+
+        QString h = "Prueba " + QString::number( i );
+        resultados.append(h);
     }
 
     //Promedia todas las simulaciones y las muestra en pantalla.
     this->promSims();
 
+    this->filasLeidas = 0;
+    this->endResetModel();
     //RECORDAR ELIMINAR SIMS
 }
 
@@ -64,25 +69,52 @@ void controller::actNumSal(int numSal){
 
 int controller::rowCount(const QModelIndex &parent) const
 {
-   // Q_UNUSED(parent);
-    //return this->fetchedRowCount;
+    Q_UNUSED(parent);
+    return this->filasLeidas;
 }
 
 
 QVariant controller::data(const QModelIndex &index, int role) const
 {
-    /*if ( ! index.isValid() )
+    if ( ! index.isValid() )
         return QVariant();
 
-    if ( index.row() < 0 || index.row() >= totalResults.count() )//
+    if ( index.row() < 0 || index.row() >= resultados.count() )//
         return QVariant();
 
     if (role == Qt::DisplayRole)
     {
-            if(totalResults.count() > index.row()){
-                return totalResults[index.row()];
+            if(resultados.count() > index.row()){
+                return resultados[index.row()];
             }
     }
 
-    return QVariant();*/
+    return QVariant();
+}
+
+
+bool controller::canFetchMore(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent);
+    return this->filasLeidas < resultados.count();
+}
+
+
+void controller::fetchMore(const QModelIndex &parent)
+{
+    Q_UNUSED(parent);
+    int remainder = 0;
+    remainder = resultados.count();
+    remainder = remainder - this->filasLeidas;
+    int itemsToFetch = qMin(100, remainder);
+
+    if (itemsToFetch <= 0)
+        return;
+
+    int firstRow = this->filasLeidas;
+    int lastRow = this->filasLeidas + itemsToFetch - 1;
+
+    beginInsertRows(QModelIndex(), firstRow, lastRow);
+    this->filasLeidas += itemsToFetch;
+    endInsertRows();
 }

@@ -34,6 +34,7 @@ class Simulacion : public QThread
 
         QQueue<proceso *> colaListosCPU;
         QQueue<proceso *> colaListosDispositivos;
+        QQueue<proceso *> colaSalida;
 
     public:
         Simulacion(int numSim, int tiemSim, int quanSim, bool expon);

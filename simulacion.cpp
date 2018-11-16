@@ -37,11 +37,18 @@ void Simulacion::correrSim(){
     // Desde acá se realiza los eventos falta evento 1, 2, 3 y el que saca las estadisticas al final. además de la clase proceso
 
     // Ejemplo para verlo correr.
+    int evento = 1;
     reloj = 0;
     evento1();
     do{
+        emit this->actReloj(reloj);
+        emit this->actCpu(CPULibre);
+        emit this->actIo(IOLibre);
+        emit this->actEvento(evento);
+        emit this->actNumCola(colaListosCPU.size());
+        emit this->actNumSal(colaSalida.size());
 
-        int evento = manejadorEventos->ObtenerEventoMasProximo();
+        evento = manejadorEventos->ObtenerEventoMasProximo();
         printf("evento %d y reloj %d\n",evento,reloj);
         switch(evento)
         {
@@ -55,7 +62,7 @@ void Simulacion::correrSim(){
                 evento3();
                 break;
         }
-        emit this->actReloj(reloj);
+
         reloj = manejadorEventos->obtenerProximoTiempo();
     }
     while(reloj <= tiemSims);

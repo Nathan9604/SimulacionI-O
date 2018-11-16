@@ -22,6 +22,8 @@ class controller : public QAbstractListModel
         double tiempoPromedioUsoCpuTotal;
         double tiempoPromedioUsoIOTotal;
 
+        int filasLeidas = 0;
+
 
     public:
         explicit controller(QObject *parent = nullptr);
@@ -32,6 +34,10 @@ class controller : public QAbstractListModel
     public: // Overriden methods from QAbastractListModel
         virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
         virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+
+    protected:
+        virtual bool canFetchMore(const QModelIndex &parent) const override;
+        virtual void fetchMore(const QModelIndex &parent) override;
 
     signals:
         void actualiceReloj(int reloj);

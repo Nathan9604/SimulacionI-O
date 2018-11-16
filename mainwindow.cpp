@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->tabla->setCurrentIndex(0);
 }
 
 MainWindow::~MainWindow()
@@ -19,9 +20,9 @@ void MainWindow::on_OkButtom_2_accepted()
             && (ui->normal->isChecked() == true || ui->exponencial->isChecked() == true) ){
 
         // Deshabilita la inicialización y pasa a la página de la simulación.
+        ui->tabla->setCurrentIndex(1);
         ui->errorText->setText("");
         ui->tabla->setTabEnabled(0, false);
-        ui->tabla->setCurrentIndex(1);
 
         // Crea y vincula las señales.
         this->con = new controller(this);
@@ -69,8 +70,8 @@ void MainWindow::actualiceEvento(int evento){
     ui->numEvRes->setText( QString::number(evento) );
 }
 
-void MainWindow::actualiceCpu(bool usoCpu){
-    if(usoCpu == true){
+void MainWindow::actualiceCpu(bool cpuLibre){
+    if(cpuLibre == false){
         ui->cpuVal->setText("Ocupado");
         ui->cpuVal->setStyleSheet("QLabel { color : red; }");
     }
@@ -80,8 +81,8 @@ void MainWindow::actualiceCpu(bool usoCpu){
     }
 }
 
-void MainWindow::actualiceIo(bool usoIo){
-    if(usoIo == true){
+void MainWindow::actualiceIo(bool ioLibre){
+    if(ioLibre == false){
         ui->ioVal->setText("Ocupado");
         ui->ioVal->setStyleSheet("QLabel { color : red; }");
     }
