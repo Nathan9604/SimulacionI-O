@@ -72,6 +72,7 @@ void ManejadorEventos::indicarProximaSalidaIO(float p, proceso * pid)
 {
     proximaSalidaIO = p;
     proximoSalirIO = pid;
+    printf("ProximaSalidaIO %d",p);
 
 }
 void ManejadorEventos::indicarProximaSalidaCpu(float p, proceso * pid )

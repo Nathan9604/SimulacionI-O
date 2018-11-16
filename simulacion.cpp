@@ -87,7 +87,8 @@ void Simulacion::evento1()
 void Simulacion::evento2(){
     //manejadorEventos->proximoSalirCpu->sumarTiempoCola( reloj - manejadorEventos->proximoSalirCpu->entradaCola );
 
-    int siguienteEvento = random();
+    int siguienteEvento = rand() % 100;
+    printf("siguienteEvento %d",siguienteEvento);
 
     if(siguienteEvento < 50) siguienteEvento = 1;
     else if (siguienteEvento >= 50 && siguienteEvento < 70) siguienteEvento = 2;
@@ -155,9 +156,53 @@ void Simulacion::evento2(){
 
 }
 
+
+//Evnento: Salida de un proceso de la cola de dispositivos
 void Simulacion::evento3(){
-    proceso *p = new proceso();
+    proceso * p = new proceso();
     manejadorEventos->indicarProximaSalidaIO(reloj + 10,p);
+
+    //Obtiene el proceso sacado
+    proceso * procesoListoDispositivo;
+
+    if(colaListosDispositivos.size() > 0)
+    {
+        procesoListoDispositivo = colaListosDispositivos.front();
+
+        //Elimina el proceso de la cola de dispositivos
+        colaListosDispositivos.pop_front();
+
+        //Si queda un proceso en la cola de dispositivos, entonces avisa al manejador de eventos
+        if(colaListosDispositivos.size() > 0)
+        {
+           //Obtiene el proceso que esta de primero en la lista
+           manejadorEventos->indicarProximaSalidaIO(distribucionIO( (random()/100) ), colaListosDispositivos.front());
+        }
+        else
+        {
+            manejadorEventos->vaciarSalidaIO();
+        }
+
+
+        //Decide que hacer con el proceso que salio de la cola de dispositivos
+
+        if(CPULibre)
+        {
+            //Avisa que este proceso sera el proximo en salir del cpu
+            manejadorEventos->indicarProximaSalidaCpu(reloj + (quanSims/2) + distribucionUniforme( (random()/100) ), procesoListoDispositivo);
+
+
+            CPULibre = false;
+            emit this->actCpu(CPULibre);
+        }
+        else //Manda el proceso a la cola de listos
+        {
+            colaListosCPU.push_front(procesoListoDispositivo);
+            emit this->actNumCola(colaListosCPU.size());
+        }
+    }
+
+
 }
 
 void Simulacion::estadisticasSim(){
