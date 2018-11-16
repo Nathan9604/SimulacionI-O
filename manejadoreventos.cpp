@@ -28,24 +28,36 @@ void ManejadorEventos::vaciarSalidaCpu()
 
 int ManejadorEventos::obtenerProximoTiempo()
 {
-    int tiempo = 1;
+    int tiempo = -1;
 
     if(proximoArribo != INFINITO)
     {
-        if(proximoArribo < proximaSalidaIO && proximoArribo < proximaSalidaCpu)
+        if(proximoArribo <= proximaSalidaIO && proximoArribo <= proximaSalidaCpu){
             tiempo = proximoArribo;
+            printf("arribo %d\n",tiempo);
+            return tiempo;
+        }
+
     }
 
-    if(tiempo == -1 && proximaSalidaIO != INFINITO)
+    if(proximaSalidaIO != INFINITO)
     {
-        if(proximaSalidaIO < proximoArribo && proximaSalidaIO < proximaSalidaCpu)
+        if(proximaSalidaIO <= proximoArribo && proximaSalidaIO <= proximaSalidaCpu){
             tiempo = proximaSalidaIO;
+            printf("io %d\n",tiempo);
+            return tiempo;
+        }
+
     }
 
-    if(tiempo == -1 && proximaSalidaCpu != INFINITO)
+    if(proximaSalidaCpu != INFINITO)
     {
-        if(proximaSalidaCpu < proximoArribo && proximaSalidaCpu < proximaSalidaIO)
+        if(proximaSalidaCpu <= proximoArribo && proximaSalidaCpu <= proximaSalidaIO){
             tiempo = proximaSalidaCpu;
+            printf("cpu %d\n",tiempo);
+            return tiempo;
+        }
+
     }
 
     return tiempo;
@@ -77,20 +89,20 @@ int ManejadorEventos::ObtenerEventoMasProximo()
 
     if(proximoArribo != INFINITO)
     {
-        if(proximoArribo < proximaSalidaIO && proximoArribo < proximaSalidaCpu)
+        if(proximoArribo <= proximaSalidaIO && proximoArribo <= proximaSalidaCpu)
             evento = 1;
     }
 
     if(evento == -1 && proximaSalidaIO != INFINITO)
     {
-        if(proximaSalidaIO < proximoArribo && proximaSalidaIO < proximaSalidaCpu)
-            evento = 2;
+        if(proximaSalidaIO <= proximoArribo && proximaSalidaIO <= proximaSalidaCpu)
+            evento = 3;
     }
 
     if(evento == -1 && proximaSalidaCpu != INFINITO)
     {
-        if(proximaSalidaCpu < proximoArribo && proximaSalidaCpu < proximaSalidaIO)
-            evento = 3;
+        if(proximaSalidaCpu <= proximoArribo && proximaSalidaCpu <= proximaSalidaIO)
+            evento = 2;
     }
 
     return evento;
@@ -104,16 +116,3 @@ proceso * ManejadorEventos::obtenerProximoProcesoCPU()
 {
     return proximoSalirCpu;
 }
-
-void ManejadorEventos::evento1(proceso *p)
-{
-    if(CPULibre == true){
-        CPULIbre == false;
-        proximoProcesoCpu = p;
-    }
-    else{
-        colaListosCPU.push_back(p);
-        p->actualizarEntradaCola(reloj);
-    }
-}
-

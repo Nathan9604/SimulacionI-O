@@ -9,7 +9,7 @@ void controller::simular(int numSim, int tiemSim, int quanSim, bool expon){
 
     for(int i = 0; i < numSim; i++){
         sim = new Simulacion(numSim, tiemSim, quanSim, expon);
-
+printf("iteracion %d\n",i);
         // Realiza la conección entre simulación y el controller.
         this->connect( this->sim, &Simulacion::actReloj, this, &controller::actReloj );
         this->connect( this->sim, &Simulacion::actEvento, this, &controller::actEvento );

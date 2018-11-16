@@ -28,12 +28,19 @@ class Simulacion : public QThread
         //Utilizadas para calcular proximo valor del reloj
         ManejadorEventos * manejadorEventos;
 
+        int reloj;
+        bool CPULibre;
+        bool IOLibre;
 
+        QQueue<proceso *> colaListosCPU;
+        QQueue<proceso *> colaListosDispositivos;
 
     public:
         Simulacion(int numSim, int tiemSim, int quanSim, bool expon);
         void correrSim();
         void estadisticasSim();
+        void evento1();
+        void evento2();
 
     signals:
         void actReloj(int reloj);

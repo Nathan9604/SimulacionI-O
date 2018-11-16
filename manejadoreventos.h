@@ -4,22 +4,17 @@
 #ifndef MANEJADOREVENTOS_H
 #define MANEJADOREVENTOS_H
 
-#define INFINITO -1
+#define INFINITO 100000000
 
 class ManejadorEventos
 {
 protected:
     proceso * proximoSalirIO;
     proceso * proximoSalirCpu;
-    proceso *proximoProcesoCpu;
 
     int proximoArribo;
     int proximaSalidaIO;
     int proximaSalidaCpu;
-    bool CPULibre;
-    QQueue<proceso> colaListosCPU;
-    QQueue<proceso> colaListosDispositivos;
-
 
 public:
     ManejadorEventos();
@@ -38,7 +33,6 @@ public:
 
     int obtenerProximoTiempo();
 
-    void evento1(proceso * p);
 	void vaciarSalidaIO();
 	void vaciarSalidaCpu();
 };
