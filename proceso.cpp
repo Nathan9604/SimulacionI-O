@@ -17,3 +17,13 @@ void proceso::actualizarEntradaCola(float reloj)
 {
     entradaCola = reloj;
 }
+
+void proceso::sumarTiempoCPU(float cantidad)
+{
+    tiempoCPU += cantidad;
+}
+
+void proceso::sumarTiempoDispositivo(float cantidad)
+{
+    tiempoDispositivo += cantidad;
+}
