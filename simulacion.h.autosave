@@ -4,6 +4,7 @@
 #include <math.h>
 #include <QtCore>
 #include <QList>
+#include <iterator>
 #include <random>
 
 
@@ -26,6 +27,7 @@ class Simulacion : public QThread
         double coeficienteEficiencia;
         double tiempoPromedioUsoCpu;
         double tiempoPromedioUsoIO;
+        double tiempoPromedioColas;
 
         int contadorUsosCpu;
         int contadorUsosIO;

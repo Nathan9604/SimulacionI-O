@@ -5,17 +5,21 @@
 class proceso
 {
 protected:
-    float tiempoCola;
-    float entradaCola;
-    float tiempoCPU;
-    float tiempoDispositivo;
+    double tiempoCola;
+    double entradaCola;
+    double tiempoCPU;
+    double tiempoDispositivo;
 public:
     proceso();
     ~proceso();
-    void sumarTiempoCola(float cantidad);
-    void actualizarEntradaCola(float reloj);
-    void sumarTiempoCPU(float cantidad);
-    void sumarTiempoDispositivo(float cantidad);
+    void sumarTiempoCola(double cantidad);
+    void actualizarEntradaCola(double reloj);
+    void sumarTiempoCPU(double cantidad);
+    void sumarTiempoDispositivo(double cantidad);
+
+    double obtenerTiempoCPU();
+    double obtenerTiempoIO();
+    double obtenerTiempoCola();
 
 
     //lo mismo con io y cpu

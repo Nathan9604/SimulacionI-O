@@ -8,22 +8,38 @@ proceso::proceso()
 
 proceso::~proceso(){}
 
-void proceso::sumarTiempoCola(float cantidad)
+void proceso::sumarTiempoCola(double cantidad)
 {
     tiempoCola += entradaCola - cantidad;
+    //No es tiempoCola += cantidad - entradaCola ?
 }
 
-void proceso::actualizarEntradaCola(float reloj)
+void proceso::actualizarEntradaCola(double reloj)
 {
     entradaCola = reloj;
 }
 
-void proceso::sumarTiempoCPU(float cantidad)
+void proceso::sumarTiempoCPU(double cantidad)
 {
     tiempoCPU += cantidad;
 }
 
-void proceso::sumarTiempoDispositivo(float cantidad)
+void proceso::sumarTiempoDispositivo(double cantidad)
 {
     tiempoDispositivo += cantidad;
+}
+
+double proceso::obtenerTiempoCPU()
+{
+    return tiempoCPU;
+}
+
+double proceso::obtenerTiempoIO()
+{
+    return tiempoDispositivo;
+}
+
+double proceso::obtenerTiempoCola()
+{
+    return tiempoCola;
 }
