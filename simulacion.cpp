@@ -65,7 +65,17 @@ void Simulacion::correrSim(){
 
         reloj = manejadorEventos->obtenerProximoTiempo();
     }
+    //Son los promedios de cada corrida, no el total
     while(reloj <= tiemSims);
+    QList<proceso>::iterator i;
+    for (i = colaSalida.begin(); i != colaSalida.end(); i++){
+        tiempoPromedioUsoCpu += i->obtenerTiempoCPU();
+        tiempoPromedioUsoIO += i->obtenerTiempoIO();
+        tiempoPromedioColas += i->obtenerTiempoCola();
+    }
+    tiempoPromedioColas = tiempoPromedioColas / colaSalida.size();
+    tiempoPromedioUsoCpu = tiempoPromedioUsoCpu / colaSalida.size();
+    tiempoPromedioUsoIO = tiempoPromedioUsoIO / colaSalida.size
 }
 
 void Simulacion::evento1()
@@ -74,14 +84,21 @@ void Simulacion::evento1()
 
     if(CPULibre == true){
         CPULibre = false;
-        float tiempoCPUactual = reloj + (quanSims/2) + distribucionUniforme( (random()/100) );; //+ distribución 20 a 40
+        float tiempoCPUactual = reloj + (quanSims/2) + distribucionUniforme( (random()/100) );
         manejadorEventos->indicarProximaSalidaCpu(tiempoCPUactual,p);
     }
     else{
         colaListosCPU.enqueue(p);
         p->actualizarEntradaCola(reloj);
     }
-    manejadorEventos->indicarProximoArribo(reloj + 20);
+    //Se calcula el tiempo del próximo arribo
+    double proximoArribo;
+    if(normal)
+        proximoArribo = distribucionNormal(25,4);
+    else if(exponencial)
+        proximoArribo = distribucionExponencial(30);
+
+    manejadorEventos->indicarProximoArribo(proximoArribo);
 }
 
 void Simulacion::evento2(){
@@ -180,6 +197,8 @@ void Simulacion::evento2(){
 void Simulacion::evento3(){
     proceso * p = new proceso();
     manejadorEventos->indicarProximaSalidaIO(reloj + 10,p);
+    double tiempoCPUactual;
+    double tiempoIOactual;
 
     //Obtiene el proceso sacado
     proceso * procesoListoDispositivo;
@@ -194,8 +213,12 @@ void Simulacion::evento3(){
         //Si queda un proceso en la cola de dispositivos, entonces avisa al manejador de eventos
         if(colaListosDispositivos.size() > 0)
         {
+            tiempoIOactual = distribucionIO( (random()/100) );
            //Obtiene el proceso que esta de primero en la lista
-           manejadorEventos->indicarProximaSalidaIO(distribucionIO( (random()/100) ), colaListosDispositivos.front());
+           manejadorEventos->indicarProximaSalidaIO(tiempoIOactual, colaListosDispositivos.front());
+           //Estadíticas de proceso que acaba de salir de IO
+           colaListosDispositivos.front()->sumarTiempoDispositivo(tiempoIOactual);
+           colaListosDispositivos.front()->sumarTiempoCola(reloj);
         }
         else
         {
@@ -208,8 +231,12 @@ void Simulacion::evento3(){
         if(CPULibre)
         {
             //Avisa que este proceso sera el proximo en salir del cpu
-            manejadorEventos->indicarProximaSalidaCpu(reloj + (quanSims/2) + distribucionUniforme( (random()/100) ), procesoListoDispositivo);
+            tiempoCPUactual = reloj + (quanSims/2) + distribucionUniforme( (random()/100) );
+            manejadorEventos->indicarProximaSalidaCpu(tiempoCPUactual, procesoListoDispositivo);
 
+            //Actualiza estadísticas de proceso que va a salir de CPU
+            procesoListoDispositivo->sumarTiempoCPU(tiempoCPUactual);
+            procesoListoDispositivo->sumarTiempoCola(reloj);
 
             CPULibre = false;
             emit this->actCpu(CPULibre);
@@ -218,6 +245,8 @@ void Simulacion::evento3(){
         {
             colaListosCPU.push_front(procesoListoDispositivo);
             emit this->actNumCola(colaListosCPU.size());
+            //Actualiza entrada en cola de proceso
+            procesoListoDispositivo->actualizarEntradaCola(reloj);
         }
     }
 
@@ -225,12 +254,6 @@ void Simulacion::evento3(){
 }
 
 void Simulacion::estadisticasSim(){
-    QList<proceso>::iterator i;
-    for (i = colaSalida.begin(); i != colaSalida.end(); i++){
-        tiempoPromedioUsoCpu += i->obtenerTiempoCPU();
-        tiempoPromedioUsoIO += i->obtenerTiempoIO();
-        tiempoPromedioColas += i->obtenerTiempoCola();
-    }
 
     //Falta tiempo promedio colas
     if(contadorUsosIO != 0)
