@@ -67,15 +67,15 @@ void Simulacion::correrSim(){
     }
     //Son los promedios de cada corrida, no el total
     while(reloj <= tiemSims);
-    QList<proceso>::iterator i;
+    QList<proceso*>::iterator i;
     for (i = colaSalida.begin(); i != colaSalida.end(); i++){
-        tiempoPromedioUsoCpu += i->obtenerTiempoCPU();
+        /*tiempoPromedioUsoCpu += i->obtenerTiempoCPU();
         tiempoPromedioUsoIO += i->obtenerTiempoIO();
-        tiempoPromedioColas += i->obtenerTiempoCola();
+        tiempoPromedioColas += i->obtenerTiempoCola();*/
     }
     tiempoPromedioColas = tiempoPromedioColas / colaSalida.size();
     tiempoPromedioUsoCpu = tiempoPromedioUsoCpu / colaSalida.size();
-    tiempoPromedioUsoIO = tiempoPromedioUsoIO / colaSalida.size
+    tiempoPromedioUsoIO = tiempoPromedioUsoIO / colaSalida.size();
 }
 
 void Simulacion::evento1()
@@ -93,9 +93,9 @@ void Simulacion::evento1()
     }
     //Se calcula el tiempo del próximo arribo
     double proximoArribo;
-    if(normal)
+    if(/*normal*/true)
         proximoArribo = distribucionNormal(25,4);
-    else if(exponencial)
+    else if(/*exponencial*/false)
         proximoArribo = distribucionExponencial(30);
 
     manejadorEventos->indicarProximoArribo(proximoArribo);
