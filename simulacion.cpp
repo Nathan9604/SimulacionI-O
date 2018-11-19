@@ -110,7 +110,7 @@ void Simulacion::evento1()
     else if(/*exponencial*/false)
         proximoArribo = distribucionExponencial((random()/100) );
 
-    manejadorEventos->indicarProximoArribo(proximoArribo);
+    manejadorEventos->indicarProximoArribo(reloj + proximoArribo);
 }
 
 void Simulacion::evento2(){
