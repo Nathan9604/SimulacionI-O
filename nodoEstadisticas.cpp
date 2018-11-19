@@ -6,6 +6,8 @@ nodoEstadisticas::nodoEstadisticas()
     tiempoPromedioColas = 0;
     tiempoPromedioUsoCpu = 0;
     tiempoPromedioUsoIO = 0;
+    coeficienteEficiencia = 0;
+    ocupacionServidor = 0;
 }
 
 //Destructor
@@ -38,6 +40,18 @@ void nodoEstadisticas::asignarPromedioTotalSistema(double nuevo)
     tiempoPromedioTotalSistema = nuevo;
 }
 
+//Pone el coeficiente de eficiencia
+void nodoEstadisticas::asignarCoeficienteEficiencia(double nuevo)
+{
+    coeficienteEficiencia = nuevo;
+}
+
+//Pone la ocupación del servidor
+void nodoEstadisticas::asignarOcupacionServidor(double nuevo)
+{
+    ocupacionServidor = nuevo;
+}
+
 //Se obtiene el promedio en colas de una corrida
 double nodoEstadisticas::obtenerPromedioColas()
 {
@@ -61,3 +75,16 @@ double nodoEstadisticas::obtenerPromedioTotalSistema()
 {
     return tiempoPromedioTotalSistema;
 }
+
+//Se obtiene ocupacion del servidor
+double nodoEstadisticas::obtenerOcupacionServidor()
+{
+    return ocupacionServidor;
+}
+
+//Se obtiene coeficiente de eficiencia
+double nodoEstadisticas::obtenerCoeficienteEficiencia()
+{
+    return coeficienteEficiencia;
+}
+

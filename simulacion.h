@@ -49,7 +49,7 @@ class Simulacion : public QThread
     public:
         Simulacion(int numSim, int tiemSim, int quanSim, bool expon);
         void correrSim();
-        void estadisticasSim();
+        nodoEstadisticas* estadisticasSim();
 
         int random();
         float distribucionExponencial(float random);
@@ -57,6 +57,7 @@ class Simulacion : public QThread
         float distribucionNormal();
         float distribucionIO(float random);
         float eleccionDistribucion();
+        void estadisticasFinal();
 
         void evento1();
         void evento2();

@@ -10,6 +10,8 @@ class nodoEstadisticas
     double tiempoPromedioUsoIO;
     double tiempoPromedioColas;
     double tiempoPromedioTotalSistema;
+    double coeficienteEficiencia;
+    double ocupacionServidor;
 
     public:
     //Constructor
@@ -25,6 +27,10 @@ class nodoEstadisticas
     double obtenerPromedioColas();
     //Se obtiene el tiempo promedio total en el sistema de la corrida
     double obtenerPromedioTotalSistema();
+    //Se obtiene ocupación del servidor
+    double obtenerOcupacionServidor();
+    //Se obtiene coeficiente eficiencia
+    double obtenerCoeficienteEficiencia();
 
     //Se asigna el tiempo promedio en CPU de la corrida, con el parámetro que llega
     void asignarPromedioTotalSistema(double nuevo);
@@ -34,6 +40,10 @@ class nodoEstadisticas
     void asignarPromedioIO(double nuevo);
     //Se asigna el tiempo promedio total en el sistema de la corrida, con el parámetro que llega
     void asignarPromedioColas(double nuevo);
+    //Se asigna ocupación del servidor de la corrida
+    void asignarOcupacionServidor(double nuevo);
+    //Se asigna el coeficiente de eficiencia de la corrida
+    void asignarCoeficienteEficiencia(double nuevo);
 };
 
 #endif // NODOESTADÍSTICAS_H
