@@ -15,6 +15,7 @@ class controller : public QAbstractListModel
     protected:
         QVector<QString> resultados;
         QVector<Simulacion *> sims;
+        QList<nodoEstadisticas *> listaEstadisticas;
         Simulacion *sim;
 
         //Estadisticas de todas las simulaciones. Esto no ocupa contadores ya que dichos contadores equivalen a la cantidad total de simulaciones
@@ -47,6 +48,7 @@ class controller : public QAbstractListModel
         void actualiceIo(bool usoIo);
         void actualiceNumCola(int numCola);
         void actualiceNumSal(int numSal);
+        void actualiceNumColaIO(int numColaIO);
 
     protected slots:
         void actReloj(float reloj);
@@ -55,6 +57,8 @@ class controller : public QAbstractListModel
         void actIo(bool usoIo);
         void actNumCola(int numCola);
         void actNumSal(int numSal);
+        void actNumColaIO(int numColaIO);
+        void almacenarResultados(nodoEstadisticas * nuevo);
 };
 
 #endif // CONTROLLER_H

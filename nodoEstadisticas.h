@@ -1,5 +1,5 @@
-#ifndef NODOESTADÍSTICAS_H
-#define NODOESTADÍSTICAS_H
+#ifndef NODOESTADISTICAS_H
+#define NODOESTADISTICAS_H
 
 //Son las estadísticas de una corrida
 class nodoEstadisticas

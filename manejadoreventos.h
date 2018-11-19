@@ -40,9 +40,7 @@ public:
     //Retorna null si no hay ningun proceso en CPU
     proceso * obtenerProximoProcesoCPU();
 
-    //Obtiene el tiempo más proximo en el que ocurrira un evento, ya sea
-    //un arribo, salida de io o salida de cpu.
-    int obtenerProximoTiempo();
+    float obtenerProximoTiempo();
 
     //Indica que ya no hay ningun proceso en IO
 	void vaciarSalidaIO();

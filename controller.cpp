@@ -9,7 +9,6 @@ void controller::simular(int numSim, int tiemSim, int quanSim, bool expon){
 
     for(int i = 0; i < numSim; i++){
         sim = new Simulacion(numSim, tiemSim, quanSim, expon);
-printf("iteracion %d\n",i);
         // Realiza la conección entre simulación y el controller.
         this->connect( this->sim, &Simulacion::actReloj, this, &controller::actReloj );
         this->connect( this->sim, &Simulacion::actEvento, this, &controller::actEvento );
@@ -17,21 +16,23 @@ printf("iteracion %d\n",i);
         this->connect( this->sim, &Simulacion::actIo, this, &controller::actIo );
         this->connect( this->sim, &Simulacion::actNumCola, this, &controller::actNumCola );
         this->connect( this->sim, &Simulacion::actNumSal, this, &controller::actNumSal );
+        this->connect( this->sim, &Simulacion::actNumColaIO, this, &controller::actNumColaIO );
+        this->connect( this->sim, &Simulacion::almacenarResultados, this, &controller::almacenarResultados );
 
         //Ejecuta la simulación y luego le saca las estádisticas.
-        sim->correrSim();
-        nodoEstadisticas *n = sim->estadisticasSim();
+        sim->start();
+        sim->estadisticasSim();
 
         //Agrege las estádisticas a la lista de despliegue
 
         //Agrega la simulación al vector de simulaciones.
         sims.append(sim);
 
-        QString h = "Corrida " + QString::number( i ) + "\n" + "Tiempo promedio total programa en el sistema = " + QString::number(n->obtenerPromedioTotalSistema()) +
+        /*QString h = "Corrida " + QString::number( i ) + "\n" + "Tiempo promedio total programa en el sistema = " + QString::number(n->obtenerPromedioTotalSistema()) +
         "\n" + "Tiempo promedio programa en CPU = " + QString::number(n->obtenerPromedioCPU()) + "\n" + "Ocupación del servidor = " + QString::number(n->obtenerOcupacionServidor()) + "\n" +
         "Tiempo de uso promedio de dispositivo E/S = " + QString::number(n->obtenerPromedioIO()) + "\n" + "Promedio tiempo en colas = " + QString::number(n->obtenerPromedioColas()) + "\n" +
-        "Coeficiente de eficiencia = " + QString::number(n->obtenerCoeficienteEficiencia()) + "\n";
-        resultados.append(h);
+        "Coeficiente de eficiencia = " + QString::number(n->obtenerCoeficienteEficiencia()) + "\n";*/
+        //resultados.append(h);
     }
 
     //Promedia todas las simulaciones y las muestra en pantalla.
@@ -68,6 +69,25 @@ void controller::actNumCola(int numCola){
 
 void controller::actNumSal(int numSal){
     emit this->actualiceNumSal(numSal);
+}
+
+void controller::actNumColaIO(int numColaIO){
+    emit this->actualiceNumColaIO(numColaIO);
+}
+
+void controller::almacenarResultados(nodoEstadisticas * n){
+    resultados.append( "***************************************************");
+    //resultados.append( "Tiempo promedio en colas " + QString::number(n->obtenerPromedioColas()) );
+    //resultados.append( "Tiempo promedio del uso de CPU " + QString::number(n->obtenerPromedioCPU()));
+    //resultados.append( "Tiempo promedio del uso de IO " + QString::number(n->obtenerPromedioIO()));
+    //resultados.append( "Tiempo promedio Total en el sistema " + QString::number(n->obtenerPromedioTotalSistema()));
+    resultados.append("Tiempo promedio total programa en el sistema = " + QString::number(n->obtenerPromedioTotalSistema()) +
+            "\n" + "Tiempo promedio programa en CPU = " + QString::number(n->obtenerPromedioCPU()) + "\n" + "Ocupación del servidor = " + QString::number(n->obtenerOcupacionServidor()) + "\n" +
+            "Tiempo de uso promedio de dispositivo E/S = " + QString::number(n->obtenerPromedioIO()) + "\n" + "Promedio tiempo en colas = " + QString::number(n->obtenerPromedioColas()) + "\n" +
+            "Coeficiente de eficiencia = " + QString::number(n->obtenerCoeficienteEficiencia()) + "\n");
+    resultados.append( "***************************************************");
+
+    listaEstadisticas.append(n);
 }
 
 int controller::rowCount(const QModelIndex &parent) const

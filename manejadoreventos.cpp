@@ -32,9 +32,7 @@ void ManejadorEventos::vaciarSalidaCpu()
 	proximoSalirCpu = 0;
 }
 
-//Obtiene el tiempo más proximo en el que ocurrira un evento, ya sea
-//un arribo, salida de io o salida de cpu.
-int ManejadorEventos::obtenerProximoTiempo()
+float ManejadorEventos::obtenerProximoTiempo()
 {
     float tiempo = -1;
 
@@ -45,7 +43,7 @@ int ManejadorEventos::obtenerProximoTiempo()
     {
         if(proximoArribo <= proximaSalidaIO && proximoArribo <= proximaSalidaCpu){
             tiempo = proximoArribo;
-            printf("arribo %9.6f\n",tiempo);
+            //printf("arribo %9.6f\n",tiempo);
             return tiempo;
         }
 
@@ -55,7 +53,7 @@ int ManejadorEventos::obtenerProximoTiempo()
     {
         if(proximaSalidaCpu <= proximoArribo && proximaSalidaCpu <= proximaSalidaIO){
             tiempo = proximaSalidaCpu;
-            printf("cpu %9.6f\n",tiempo);
+            //printf("cpu %9.6f\n",tiempo);
             return tiempo;
         }
 
@@ -65,7 +63,7 @@ int ManejadorEventos::obtenerProximoTiempo()
     {
         if(proximaSalidaIO <= proximoArribo && proximaSalidaIO <= proximaSalidaCpu){
             tiempo = proximaSalidaIO;
-            printf("io %9.6f\n",tiempo);
+            //printf("io %9.6f\n",tiempo);
             return tiempo;
         }
 
@@ -89,8 +87,6 @@ void ManejadorEventos::indicarProximaSalidaIO(float p, proceso * pid)
 {
     proximaSalidaIO = p;
     proximoSalirIO = pid;
-    printf("ProximaSalidaIO %d",p);
-
 }
 
 //Indica cuando sera la proxima salida de io, ademàs de cual proceso sera

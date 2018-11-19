@@ -32,7 +32,7 @@ void MainWindow::on_OkButtom_2_accepted()
         this->connect( this->con, &controller::actualiceIo, this, &MainWindow::actualiceIo );
         this->connect( this->con, &controller::actualiceNumCola, this, &MainWindow::actualiceNumCola );
         this->connect( this->con, &controller::actualiceNumSal, this, &MainWindow::actualiceNumSal );
-
+        this->connect( this->con, &controller::actualiceNumColaIO, this, &MainWindow::actualiceNumColaIO );
         // Llamado al programa
         this->con->simular( ui->numSims->value(), ui->tiemSims->value(), ui->quanSims->value(), ui->exponencial->isChecked() );
 
@@ -98,4 +98,8 @@ void MainWindow::actualiceNumCola(int numCola){
 
 void MainWindow::actualiceNumSal(int numSal){
     ui->numTer->setText( QString::number(numSal) );
+}
+
+void MainWindow::actualiceNumColaIO(int numColaIO){
+    ui->numColIO->setText( QString::number(numColaIO) );
 }
