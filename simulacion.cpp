@@ -60,7 +60,7 @@ void Simulacion::correrSim(){
         emit this->actNumCola(colaListosCPU.size());
         emit this->actNumSal(colaSalida.size());
         emit this->actNumColaIO(colaListosDispositivos.size());
-
+printf("Reloj %9.6f evento%d\n",reloj, evento);
         switch(evento)
         {
             case 1:
@@ -77,6 +77,37 @@ void Simulacion::correrSim(){
         reloj = manejadorEventos->obtenerProximoTiempo();
     }
     while(reloj <= tiemSims);
+
+    //Son los promedios de cada corrida, no el total
+    proceso *p;
+    QList<proceso*>::iterator i;
+    for (i = colaSalida.begin(); i != colaSalida.end(); i++){
+        p = *i;
+        tiempoPromedioUsoCpu += p->obtenerTiempoCPU();
+        tiempoPromedioUsoIO += p->obtenerTiempoIO();
+        tiempoPromedioColas += p->obtenerTiempoCola();
+        tiempoPromedioTotalSistema += p->obtenerPromedioTotalSistema();
+    }
+    tiempoPromedioColas = tiempoPromedioColas / colaSalida.size();
+    tiempoPromedioUsoCpu = tiempoPromedioUsoCpu / colaSalida.size();
+    tiempoPromedioUsoIO = tiempoPromedioUsoIO / colaSalida.size();
+    tiempoPromedioTotalSistema = tiempoPromedioColas + tiempoPromedioUsoCpu + tiempoPromedioUsoIO / colaSalida.size();
+
+    ocupacionServidor = tiempoPromedioUsoCpu / tiemSims;
+    coeficienteEficiencia = tiempoPromedioColas / tiempoPromedioTotalSistema;
+
+    //Se guardan las estadísticas de cada simulación en la lista de estadísticas
+    nodoEstadisticas *n = new nodoEstadisticas();
+    n->asignarPromedioColas(tiempoPromedioColas);
+    n->asignarPromedioCPU(tiempoPromedioUsoCpu);
+    n->asignarPromedioIO(tiempoPromedioUsoIO);
+    n->asignarPromedioTotalSistema(tiempoPromedioTotalSistema);
+    n->asignarCoeficienteEficiencia(coeficienteEficiencia);
+    n->asignarOcupacionServidor(ocupacionServidor);
+    //listaEstadisticas.append(n);
+    //printf("PromedioColas = %lf",n->obtenerPromedioColas());
+
+    emit almacenarResultados(n);
 }
 
 void Simulacion::evento1()
@@ -85,13 +116,11 @@ void Simulacion::evento1()
 
     //Si el CPU está libre, se envía programa a CPU
     if(CPULibre == true){
-
         CPULibre = false;
         float tiempoCPUactual = reloj + (quanSims/2) + distribucionUniforme( ((float)random())/100 );
-        printf("2 %9.6f\n",tiempoCPUactual);
         manejadorEventos->indicarProximaSalidaCpu(tiempoCPUactual,p);
         //Se suma estadística de tiempo de uso de la CPU y tiempo total en el sistema del programa
-        manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCPU(tiempoCPUactual);
+        manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCPU(tiempoCPUactual - reloj);
         manejadorEventos->obtenerProximoProcesoCPU()->sumarPromedioTotalSistema(
         manejadorEventos->obtenerProximoProcesoCPU()->obtenerTiempoCPU());
     }
@@ -162,7 +191,7 @@ void Simulacion::evento2(){
 
             if(IOLibre == true){
                 IOLibre = false;
-                tiempoIOactual = distribucionIO( ((float)random())/100 );
+                tiempoIOactual = reloj + distribucionIO( ((float)random())/100 );
                 manejadorEventos->indicarProximaSalidaIO(tiempoIOactual, manejadorEventos->obtenerProximoProcesoCPU());
                                                                                            //no es próximo proceso IO?
                 manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoDispositivo(tiempoIOactual);
@@ -213,14 +242,14 @@ void Simulacion::evento3(){
         procesoListoDispositivo = colaListosDispositivos.front();
 
         //Elimina el proceso de la cola de dispositivos
-        colaListosDispositivos.pop_front();
+        colaListosDispositivos.dequeue();
 
         //Si queda un proceso en la cola de dispositivos, entonces avisa al manejador de eventos
         if(colaListosDispositivos.size() > 0)
         {
             tiempoIOactual = distribucionIO( ((float)random())/100 );
            //Obtiene el proceso que esta de primero en la lista
-           manejadorEventos->indicarProximaSalidaIO(tiempoIOactual, colaListosDispositivos.front());
+           manejadorEventos->indicarProximaSalidaIO(reloj + tiempoIOactual, colaListosDispositivos.front());
            //Estadíticas de proceso que acaba de salir de IO
            colaListosDispositivos.front()->sumarTiempoDispositivo(tiempoIOactual - reloj);
            colaListosDispositivos.front()->sumarTiempoCola(reloj);
@@ -230,6 +259,7 @@ void Simulacion::evento3(){
         }
         else
         {
+            IOLibre = true;
             manejadorEventos->vaciarSalidaIO();
         }
 
@@ -250,7 +280,7 @@ void Simulacion::evento3(){
                         manejadorEventos->obtenerProximoProcesoCPU()->obtenerTiempoCola());
 
             CPULibre = false;
-            emit this->actCpu(CPULibre);
+            //emit this->actCpu(CPULibre);
         }
         else //Manda el proceso a la cola de listos
         {
@@ -299,7 +329,7 @@ nodoEstadisticas* Simulacion::estadisticasSim()
 
 void Simulacion::estadisticasFinal()
 {
-    QList<nodoEstadisticas*>::iterator i;
+    /*QList<nodoEstadisticas*>::iterator i;
     nodoEstadisticas *n;
     for (i = listaEstadisticas.begin(); i != listaEstadisticas.end(); i++){
         n = *i;
@@ -321,13 +351,13 @@ void Simulacion::estadisticasFinal()
     if(contadorUsosCpu != 0)
     {
         tiempoPromedioUsoCpu = tiempoPromedioUsoCpu / listaEstadisticas.size();
-    }*/
+    }
 
     ocupacionServidor = ocupacionServidor / listaEstadisticas.size();
     coeficienteEficiencia = coeficienteEficiencia / listaEstadisticas.size();
     //Actualiza los contadores globales
     //tiempoPromedioUsoCpuTotal += tiempoPromedioUsoCpu;
-    //tiempoPromedioUsoIOTotal += tiempoPromedioUsoIO;
+    //tiempoPromedioUsoIOTotal += tiempoPromedioUsoIO;*/
 }
 
 int Simulacion::random()
