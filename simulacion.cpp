@@ -338,41 +338,6 @@ nodoEstadisticas* Simulacion::estadisticasSim()
     return n;
 }
 
-//Sirve para sacar el promedio de todas las corridas
-void Simulacion::estadisticasFinal()
-{
-    /*QList<nodoEstadisticas*>::iterator i;
-    nodoEstadisticas *n;
-    for (i = listaEstadisticas.begin(); i != listaEstadisticas.end(); i++){
-        n = *i;
-        tiempoPromedioUsoCpu += n->obtenerPromedioCPU();
-        tiempoPromedioUsoIO += n->obtenerPromedioIO();
-        tiempoPromedioColas += n->obtenerPromedioColas();
-        ocupacionServidor += n->obtenerOcupacionServidor();
-        coeficienteEficiencia += n->obtenerCoeficienteEficiencia();
-    }
-    tiempoPromedioUsoCpu = tiempoPromedioUsoCpu / listaEstadisticas.size();
-    tiempoPromedioUsoIO = tiempoPromedioUsoIO / listaEstadisticas.size();
-    tiempoPromedioColas = tiempoPromedioColas / listaEstadisticas.size();
-    //Falta tiempo promedio colas
-    if(contadorUsosIO != 0)
-    {
-        tiempoPromedioUsoIO = tiempoPromedioUsoCpu / listaEstadisticas.size();
-    }
-
-    if(contadorUsosCpu != 0)
-    {
-        tiempoPromedioUsoCpu = tiempoPromedioUsoCpu / listaEstadisticas.size();
-    }
-
-    ocupacionServidor = ocupacionServidor / listaEstadisticas.size();
-    coeficienteEficiencia = coeficienteEficiencia / listaEstadisticas.size();
-    tiempoPromedioTotalSistema = tiempoPromedioUsoCpu + tiempoPromedioColas + tiempoPromedioUsoIO / listaEstadisticas.size();
-    //Actualiza los contadores globales
-    //tiempoPromedioUsoCpuTotal += tiempoPromedioUsoCpu;
-    //tiempoPromedioUsoIOTotal += tiempoPromedioUsoIO;*/
-}
-
 int Simulacion::random()
 {
     return rand() % 100;

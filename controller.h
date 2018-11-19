@@ -23,6 +23,8 @@ class controller : public QAbstractListModel
         double coeficienteEficienciaTotal;
         double tiempoPromedioUsoCpuTotal;
         double tiempoPromedioUsoIOTotal;
+        double tiempoPromedioColasTotal;
+        double tiempoPromedioTotalSistema;
 
         int filasLeidas = 0;
 

@@ -66,7 +66,6 @@ class Simulacion : public QThread
         float distribucionNormal();
         float distribucionIO(float random);
         float eleccionDistribucion();
-        void estadisticasFinal();
 
         void evento1();
         void evento2();
