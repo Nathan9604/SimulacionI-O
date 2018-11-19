@@ -28,11 +28,11 @@ void controller::simular(int numSim, int tiemSim, int quanSim, bool expon){
         //Agrega la simulación al vector de simulaciones.
         sims.append(sim);
 
-        QString h = "Corrida " + QString::number( i ) + "\n" + "Tiempo promedio total programa en el sistema = " + QString::number(n->obtenerPromedioTotalSistema()) +
+        /*QString h = "Corrida " + QString::number( i ) + "\n" + "Tiempo promedio total programa en el sistema = " + QString::number(n->obtenerPromedioTotalSistema()) +
         "\n" + "Tiempo promedio programa en CPU = " + QString::number(n->obtenerPromedioCPU()) + "\n" + "Ocupación del servidor = " + QString::number(n->obtenerOcupacionServidor()) + "\n" +
         "Tiempo de uso promedio de dispositivo E/S = " + QString::number(n->obtenerPromedioIO()) + "\n" + "Promedio tiempo en colas = " + QString::number(n->obtenerPromedioColas()) + "\n" +
-        "Coeficiente de eficiencia = " + QString::number(n->obtenerCoeficienteEficiencia()) + "\n";
-        resultados.append(h);
+        "Coeficiente de eficiencia = " + QString::number(n->obtenerCoeficienteEficiencia()) + "\n";*/
+        //resultados.append(h);
     }
 
     //Promedia todas las simulaciones y las muestra en pantalla.
@@ -77,10 +77,14 @@ void controller::actNumColaIO(int numColaIO){
 
 void controller::almacenarResultados(nodoEstadisticas * n){
     resultados.append( "***************************************************");
-    resultados.append( "Tiempo promedio en colas " + QString::number(n->obtenerPromedioColas()) );
-    resultados.append( "Tiempo promedio del uso de CPU " + QString::number(n->obtenerPromedioCPU()));
-    resultados.append( "Tiempo promedio del uso de IO " + QString::number(n->obtenerPromedioIO()));
-    resultados.append( "Tiempo promedio Total en el sistema " + QString::number(n->obtenerPromedioTotalSistema()));
+    //resultados.append( "Tiempo promedio en colas " + QString::number(n->obtenerPromedioColas()) );
+    //resultados.append( "Tiempo promedio del uso de CPU " + QString::number(n->obtenerPromedioCPU()));
+    //resultados.append( "Tiempo promedio del uso de IO " + QString::number(n->obtenerPromedioIO()));
+    //resultados.append( "Tiempo promedio Total en el sistema " + QString::number(n->obtenerPromedioTotalSistema()));
+    resultados.append("Tiempo promedio total programa en el sistema = " + QString::number(n->obtenerPromedioTotalSistema()) +
+            "\n" + "Tiempo promedio programa en CPU = " + QString::number(n->obtenerPromedioCPU()) + "\n" + "Ocupación del servidor = " + QString::number(n->obtenerOcupacionServidor()) + "\n" +
+            "Tiempo de uso promedio de dispositivo E/S = " + QString::number(n->obtenerPromedioIO()) + "\n" + "Promedio tiempo en colas = " + QString::number(n->obtenerPromedioColas()) + "\n" +
+            "Coeficiente de eficiencia = " + QString::number(n->obtenerCoeficienteEficiencia()) + "\n");
     resultados.append( "***************************************************");
 
     listaEstadisticas.append(n);

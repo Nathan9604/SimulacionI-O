@@ -292,7 +292,7 @@ nodoEstadisticas* Simulacion::estadisticasSim()
     n->asignarPromedioTotalSistema(tiempoPromedioTotalSistema);
     n->asignarCoeficienteEficiencia(coeficienteEficiencia);
     n->asignarOcupacionServidor(ocupacionServidor);
-    listaEstadisticas.append(n);
+    //listaEstadisticas.append(n);
     printf("PromedioColas = %lf",n->obtenerPromedioColas());
     return n;
 }
