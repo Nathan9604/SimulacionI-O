@@ -10,9 +10,12 @@
 class ManejadorEventos
 {
 protected:
+
+    //Indica ncuales son los proximos eventos a salir
     proceso * proximoSalirIO;
     proceso * proximoSalirCpu;
 
+    //Indican en que tiempo ocurriran los proximos eventos
     float proximoArribo;
     float proximaSalidaIO;
     float proximaSalidaCpu;
@@ -29,12 +32,19 @@ public:
     //Retorna evento 1, 2, 3 o -1 para indicar que no hay ningun evento a ocurrir
     float ObtenerEventoMasProximo();
 
+    //Permite obtener el proximo proceso a salir de IO
+    //Retorna null si no hay ningun proceso en IO
     proceso * obtenerProximoProcesoIO();
+
+    //Permite obtener el proximo proceso a salir de CPU
+    //Retorna null si no hay ningun proceso en CPU
     proceso * obtenerProximoProcesoCPU();
 
     float obtenerProximoTiempo();
 
+    //Indica que ya no hay ningun proceso en IO
 	void vaciarSalidaIO();
+    //Indica que ya no hay tiempo en CPU
 	void vaciarSalidaCpu();
 };
 #endif // _MANEJADOREVENTOS_H
