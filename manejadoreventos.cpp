@@ -26,7 +26,7 @@ void ManejadorEventos::vaciarSalidaCpu()
 	proximoSalirCpu = 0;
 }
 
-int ManejadorEventos::obtenerProximoTiempo()
+float ManejadorEventos::obtenerProximoTiempo()
 {
     float tiempo = -1;
 
@@ -34,7 +34,7 @@ int ManejadorEventos::obtenerProximoTiempo()
     {
         if(proximoArribo <= proximaSalidaIO && proximoArribo <= proximaSalidaCpu){
             tiempo = proximoArribo;
-            printf("arribo %9.6f\n",tiempo);
+            //printf("arribo %9.6f\n",tiempo);
             return tiempo;
         }
 
@@ -44,7 +44,7 @@ int ManejadorEventos::obtenerProximoTiempo()
     {
         if(proximaSalidaCpu <= proximoArribo && proximaSalidaCpu <= proximaSalidaIO){
             tiempo = proximaSalidaCpu;
-            printf("cpu %9.6f\n",tiempo);
+            //printf("cpu %9.6f\n",tiempo);
             return tiempo;
         }
 
@@ -54,7 +54,7 @@ int ManejadorEventos::obtenerProximoTiempo()
     {
         if(proximaSalidaIO <= proximoArribo && proximaSalidaIO <= proximaSalidaCpu){
             tiempo = proximaSalidaIO;
-            printf("io %9.6f\n",tiempo);
+            //printf("io %9.6f\n",tiempo);
             return tiempo;
         }
 
@@ -72,8 +72,6 @@ void ManejadorEventos::indicarProximaSalidaIO(float p, proceso * pid)
 {
     proximaSalidaIO = p;
     proximoSalirIO = pid;
-    printf("ProximaSalidaIO %d",p);
-
 }
 void ManejadorEventos::indicarProximaSalidaCpu(float p, proceso * pid )
 {

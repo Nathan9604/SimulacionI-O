@@ -28,6 +28,7 @@ private slots:
     void actualiceIo(bool ioLibre);
     void actualiceNumCola(int numCola);
     void actualiceNumSal(int numSal);
+    void actualiceNumColaIO(int numColaIO);
 
 private:
     Ui::MainWindow *ui;

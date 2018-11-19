@@ -32,7 +32,7 @@ public:
     proceso * obtenerProximoProcesoIO();
     proceso * obtenerProximoProcesoCPU();
 
-    int obtenerProximoTiempo();
+    float obtenerProximoTiempo();
 
 	void vaciarSalidaIO();
 	void vaciarSalidaCpu();

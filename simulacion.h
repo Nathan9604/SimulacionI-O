@@ -45,6 +45,8 @@ class Simulacion : public QThread
         QQueue<proceso *> colaSalida;
         QList<nodoEstadisticas *> listaEstadisticas;
 
+        void run();
+
     public:
         Simulacion(int numSim, int tiemSim, int quanSim, bool expon);
         void correrSim();
@@ -55,6 +57,7 @@ class Simulacion : public QThread
         float distribucionUniforme(float random);
         float distribucionNormal(float random1, float random2);
         float distribucionIO(float random);
+        float eleccionDistribucion();
 
         void evento1();
         void evento2();
@@ -67,6 +70,7 @@ class Simulacion : public QThread
         void actIo(bool usoIo);
         void actNumCola(int numCola);
         void actNumSal(int numSal);
+        void actNumColaIO(int numColaIO);
 };
 
 #endif // SIMULACION_H

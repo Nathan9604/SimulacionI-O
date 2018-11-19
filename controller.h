@@ -46,6 +46,7 @@ class controller : public QAbstractListModel
         void actualiceIo(bool usoIo);
         void actualiceNumCola(int numCola);
         void actualiceNumSal(int numSal);
+        void actualiceNumColaIO(int numColaIO);
 
     protected slots:
         void actReloj(float reloj);
@@ -54,6 +55,7 @@ class controller : public QAbstractListModel
         void actIo(bool usoIo);
         void actNumCola(int numCola);
         void actNumSal(int numSal);
+        void actNumColaIO(int numColaIO);
 };
 
 #endif // CONTROLLER_H

@@ -9,7 +9,6 @@ void controller::simular(int numSim, int tiemSim, int quanSim, bool expon){
 
     for(int i = 0; i < numSim; i++){
         sim = new Simulacion(numSim, tiemSim, quanSim, expon);
-printf("iteracion %d\n",i);
         // Realiza la conección entre simulación y el controller.
         this->connect( this->sim, &Simulacion::actReloj, this, &controller::actReloj );
         this->connect( this->sim, &Simulacion::actEvento, this, &controller::actEvento );
@@ -17,9 +16,10 @@ printf("iteracion %d\n",i);
         this->connect( this->sim, &Simulacion::actIo, this, &controller::actIo );
         this->connect( this->sim, &Simulacion::actNumCola, this, &controller::actNumCola );
         this->connect( this->sim, &Simulacion::actNumSal, this, &controller::actNumSal );
+        this->connect( this->sim, &Simulacion::actNumColaIO, this, &controller::actNumColaIO );
 
         //Ejecuta la simulación y luego le saca las estádisticas.
-        sim->correrSim();
+        sim->start();
         sim->estadisticasSim();
 
         //Agrege las estádisticas a la lista de despliegue
@@ -65,6 +65,10 @@ void controller::actNumCola(int numCola){
 
 void controller::actNumSal(int numSal){
     emit this->actualiceNumSal(numSal);
+}
+
+void controller::actNumColaIO(int numColaIO){
+    emit this->actualiceNumColaIO(numColaIO);
 }
 
 int controller::rowCount(const QModelIndex &parent) const
