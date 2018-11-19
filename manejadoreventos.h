@@ -1,4 +1,5 @@
 #include "proceso.h"
+#include "nodoEstadisticas.h"
 #include <QQueue>
 
 #ifndef MANEJADOREVENTOS_H

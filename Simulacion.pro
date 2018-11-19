@@ -29,14 +29,16 @@ SOURCES += \
         controller.cpp \
         simulacion.cpp \
     proceso.cpp \
-    manejadoreventos.cpp
+    manejadoreventos.cpp \
+    nodoEstadisticas.cpp
 
 HEADERS += \
         mainwindow.h \
         controller.h \
         simulacion.h \
     proceso.h \
-    manejadoreventos.h
+    manejadoreventos.h \
+    nodoEstadisticas.h
 
 FORMS += \
         mainwindow.ui

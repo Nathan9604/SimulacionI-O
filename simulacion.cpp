@@ -39,6 +39,9 @@ void Simulacion::correrSim(){
     // Ejemplo para verlo correr.
     int evento = 1;
     reloj = 0;
+    tiempoPromedioColas = 0;
+    tiempoPromedioUsoCpu = 0;
+    tiempoPromedioUsoIO = 0;
     evento1();
     do{
         emit this->actReloj(reloj);
@@ -67,15 +70,24 @@ void Simulacion::correrSim(){
     }
     //Son los promedios de cada corrida, no el total
     while(reloj <= tiemSims);
+    proceso *p;
     QList<proceso*>::iterator i;
     for (i = colaSalida.begin(); i != colaSalida.end(); i++){
-        /*tiempoPromedioUsoCpu += i->obtenerTiempoCPU();
-        tiempoPromedioUsoIO += i->obtenerTiempoIO();
-        tiempoPromedioColas += i->obtenerTiempoCola();*/
+        p = *i;
+        tiempoPromedioUsoCpu += p->obtenerTiempoCPU();
+        tiempoPromedioUsoIO += p->obtenerTiempoIO();
+        tiempoPromedioColas += p->obtenerTiempoCola();
     }
     tiempoPromedioColas = tiempoPromedioColas / colaSalida.size();
     tiempoPromedioUsoCpu = tiempoPromedioUsoCpu / colaSalida.size();
     tiempoPromedioUsoIO = tiempoPromedioUsoIO / colaSalida.size();
+
+    //Se guardan las estadísticas de cada simulación en la lista
+    nodoEstadisticas *n = new nodoEstadisticas();
+    n->asignarPromedioColas(tiempoPromedioColas);
+    n->asignarPromedioCPU(tiempoPromedioUsoCpu);
+    n->asignarPromedioIO(tiempoPromedioUsoIO);
+    listaEstadisticas.append(n);
 }
 
 void Simulacion::evento1()
@@ -94,9 +106,9 @@ void Simulacion::evento1()
     //Se calcula el tiempo del próximo arribo
     double proximoArribo;
     if(/*normal*/true)
-        proximoArribo = distribucionNormal(25,4);
+        proximoArribo = distribucionNormal((random()/100) , (random()/100) );
     else if(/*exponencial*/false)
-        proximoArribo = distribucionExponencial(30);
+        proximoArribo = distribucionExponencial((random()/100) );
 
     manejadorEventos->indicarProximoArribo(proximoArribo);
 }
@@ -255,6 +267,17 @@ void Simulacion::evento3(){
 
 void Simulacion::estadisticasSim(){
 
+    QList<nodoEstadisticas*>::iterator i;
+    nodoEstadisticas *n;
+    for (i = listaEstadisticas.begin(); i != listaEstadisticas.end(); i++){
+        n = *i;
+        tiempoPromedioUsoCpu += n->obtenerPromedioCPU();
+        tiempoPromedioUsoIO += n->obtenerPromedioIO();
+        tiempoPromedioColas += n->obtenerPromedioColas();
+    }
+    tiempoPromedioUsoCpu = tiempoPromedioUsoCpu / listaEstadisticas.size();
+    tiempoPromedioUsoIO = tiempoPromedioUsoIO / listaEstadisticas.size();
+    tiempoPromedioColas = tiempoPromedioColas / listaEstadisticas.size();
     //Falta tiempo promedio colas
     if(contadorUsosIO != 0)
     {
