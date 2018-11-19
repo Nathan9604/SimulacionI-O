@@ -20,14 +20,17 @@ printf("iteracion %d\n",i);
 
         //Ejecuta la simulación y luego le saca las estádisticas.
         sim->correrSim();
-        sim->estadisticasSim();
+        nodoEstadisticas *n = sim->estadisticasSim();
 
         //Agrege las estádisticas a la lista de despliegue
 
         //Agrega la simulación al vector de simulaciones.
         sims.append(sim);
 
-        QString h = "Prueba " + QString::number( i );
+        QString h = "Corrida " + QString::number( i ) + "\n" + "Tiempo promedio total programa en el sistema = " + QString::number(n->obtenerPromedioTotalSistema()) +
+        "\n" + "Tiempo promedio programa en CPU = " + QString::number(n->obtenerPromedioCPU()) + "\n" + "Ocupación del servidor = " + QString::number(n->obtenerOcupacionServidor()) + "\n" +
+        "Tiempo de uso promedio de dispositivo E/S = " + QString::number(n->obtenerPromedioIO()) + "\n" + "Promedio tiempo en colas = " + QString::number(n->obtenerPromedioColas()) + "\n" +
+        "Coeficiente de eficiencia = " + QString::number(n->obtenerCoeficienteEficiencia()) + "\n";
         resultados.append(h);
     }
 

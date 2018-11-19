@@ -4,6 +4,7 @@
 #include <QAbstractListModel>
 #include <QVector>
 #include <QtCore>
+#include <sstream>
 
 #include "simulacion.h"
 
