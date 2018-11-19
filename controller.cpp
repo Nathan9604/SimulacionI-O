@@ -46,6 +46,8 @@ void controller::simular(int numSim, int tiemSim, int quanSim, bool expon){
 void controller::promSims(){
     QList<nodoEstadisticas*>::iterator i;
     nodoEstadisticas *n;
+    resultados.append( "***************************************************");
+    resultados.append("Promedio total de la simulación");
     for (i = listaEstadisticas.begin(); i != listaEstadisticas.end(); i++){
         n = *i;
         tiempoPromedioUsoCpuTotal += n->obtenerPromedioCPU();
