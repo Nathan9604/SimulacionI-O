@@ -42,7 +42,8 @@ class Simulacion : public QThread
 
         QQueue<proceso *> colaListosCPU;
         QQueue<proceso *> colaListosDispositivos;
-        QQueue<proceso *> colaSalida;
+        QQueue<proceso *> colaSalida; //  Cada nodo tiene datos de un programa
+        QList<nodoEstadisticas *> listaEstadisticas; //Se cada nodo tiene datos de una corrida
 
         void run();
 
@@ -50,6 +51,14 @@ class Simulacion : public QThread
         Simulacion(int numSim, int tiemSim, int quanSim, bool expon);
         void correrSim();
         nodoEstadisticas* estadisticasSim();
+
+        //Funciones para obtener estadísticos de todas las corridas
+        double obtenerTiempoColasGlobal();
+        double obtenerTiempoCPUGlobal();
+        double obtenerTiempoIOGlobal();
+        double obtenerCoeficienteEficienciaGlobal();
+        double obtenerOcupacionServidorGlobal();
+        double obtenerTiempoTotalSistema();
 
         int random();
         float distribucionExponencial(float random);
