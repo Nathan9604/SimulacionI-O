@@ -271,10 +271,16 @@ void Simulacion::evento3(){
 
 }
 
+//Saca el promedio de cada corrida
 nodoEstadisticas* Simulacion::estadisticasSim()
 {
     //Son los promedios de cada corrida, no el total
     proceso *p;
+    tiempoPromedioUsoCpu = 0;
+    tiempoPromedioUsoIO = 0;
+    tiempoPromedioColas = 0;
+    ocupacionServidor = 0;
+    coeficienteEficiencia = 0;
     QList<proceso*>::iterator i;
     for (i = colaSalida.begin(); i != colaSalida.end(); i++){
         p = *i;
@@ -304,8 +310,15 @@ nodoEstadisticas* Simulacion::estadisticasSim()
     return n;
 }
 
+//Sirve para sacar el promedio de todas las corridas
 void Simulacion::estadisticasFinal()
 {
+    tiempoPromedioColas = 0;
+    tiempoPromedioUsoCpu = 0;
+    tiempoPromedioUsoIO = 0;
+    ocupacionServidor = 0;
+    coeficienteEficiencia = 0;
+    tiempoPromedioTotalSistema = 0;
     QList<nodoEstadisticas*>::iterator i;
     nodoEstadisticas *n;
     for (i = listaEstadisticas.begin(); i != listaEstadisticas.end(); i++){
@@ -332,6 +345,7 @@ void Simulacion::estadisticasFinal()
 
     ocupacionServidor = ocupacionServidor / listaEstadisticas.size();
     coeficienteEficiencia = coeficienteEficiencia / listaEstadisticas.size();
+    tiempoPromedioTotalSistema = tiempoPromedioUsoCpu + tiempoPromedioColas + tiempoPromedioUsoIO / listaEstadisticas.size();
     //Actualiza los contadores globales
     //tiempoPromedioUsoCpuTotal += tiempoPromedioUsoCpu;
     //tiempoPromedioUsoIOTotal += tiempoPromedioUsoIO;
@@ -369,4 +383,34 @@ float Simulacion::distribucionNormal(float random1, float random2)
 float Simulacion::distribucionIO(float random)
 {
     return 20 * sqrt(3 * random + 1);
+}
+
+double Simulacion::obtenerTiempoCPUGlobal()
+{
+    return tiempoPromedioUsoCpu;
+}
+
+double Simulacion::obtenerTiempoIOGlobal()
+{
+    return tiempoPromedioUsoIO;
+}
+
+double Simulacion::obtenerTiempoColasGlobal()
+{
+    return tiempoPromedioColas;
+}
+
+double Simulacion::obtenerCoeficienteEficienciaGlobal()
+{
+    return coeficienteEficiencia;
+}
+
+double Simulacion::obtenerOcupacionServidorGlobal()
+{
+    return ocupacionServidor;
+}
+
+double Simulacion::obtenerTiempoTotalSistema()
+{
+    return tiempoPromedioTotalSistema;
 }
