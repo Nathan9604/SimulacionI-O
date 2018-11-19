@@ -290,6 +290,10 @@ void Simulacion::evento3(){
             procesoListoDispositivo->actualizarEntradaCola(reloj);
         }
     }
+    else
+    {
+        manejadorEventos->vaciarSalidaIO();
+    }
 
 
 }
