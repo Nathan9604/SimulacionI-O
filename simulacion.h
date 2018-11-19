@@ -43,7 +43,6 @@ class Simulacion : public QThread
         QQueue<proceso *> colaListosCPU;
         QQueue<proceso *> colaListosDispositivos;
         QQueue<proceso *> colaSalida;
-        QList<nodoEstadisticas *> listaEstadisticas;
 
         void run();
 
@@ -55,7 +54,7 @@ class Simulacion : public QThread
         int random();
         float distribucionExponencial(float random);
         float distribucionUniforme(float random);
-        float distribucionNormal(float random1, float random2);
+        float distribucionNormal();
         float distribucionIO(float random);
         float eleccionDistribucion();
 
@@ -71,6 +70,7 @@ class Simulacion : public QThread
         void actNumCola(int numCola);
         void actNumSal(int numSal);
         void actNumColaIO(int numColaIO);
+        void almacenarResultados(nodoEstadisticas *);
 };
 
 #endif // SIMULACION_H

@@ -95,7 +95,8 @@ void Simulacion::correrSim(){
     n->asignarPromedioCPU(tiempoPromedioUsoCpu);
     n->asignarPromedioIO(tiempoPromedioUsoIO);
     n->asignarPromedioTotalSistema(tiempoPromedioTotalSistema);
-    listaEstadisticas.append(n);
+
+    emit almacenarResultados(n);
 }
 
 void Simulacion::evento1()
@@ -285,7 +286,7 @@ void Simulacion::evento3(){
 
 void Simulacion::estadisticasSim(){
 
-    QList<nodoEstadisticas*>::iterator i;
+    /*QList<nodoEstadisticas*>::iterator i;
     nodoEstadisticas *n;
     for (i = listaEstadisticas.begin(); i != listaEstadisticas.end(); i++){
         n = *i;
@@ -297,7 +298,7 @@ void Simulacion::estadisticasSim(){
     tiempoPromedioUsoIO = tiempoPromedioUsoIO / listaEstadisticas.size();
     tiempoPromedioColas = tiempoPromedioColas / listaEstadisticas.size();
     //Falta tiempo promedio colas
-    /*if(contadorUsosIO != 0)
+    if(contadorUsosIO != 0)
     {
         tiempoPromedioUsoIO = tiempoPromedioUsoCpu / listaEstadisticas.size();
     }
@@ -307,8 +308,8 @@ void Simulacion::estadisticasSim(){
         tiempoPromedioUsoCpu = tiempoPromedioUsoCpu / listaEstadisticas.size();
     }*/
 
-    ocupacionServidor = tiempoPromedioUsoCpu / tiemSims;
-    coeficienteEficiencia = tiempoPromedioColas / tiempoPromedioTotalSistema;
+    //ocupacionServidor = tiempoPromedioUsoCpu / tiemSims;
+    //coeficienteEficiencia = tiempoPromedioColas / tiempoPromedioTotalSistema;
     //Actualiza los contadores globales
     //tiempoPromedioUsoCpuTotal += tiempoPromedioUsoCpu;
     //tiempoPromedioUsoIOTotal += tiempoPromedioUsoIO;
@@ -325,7 +326,7 @@ float Simulacion::eleccionDistribucion(){
     float valor = 0;
 
     if(exp == true) valor = distribucionExponencial(((float)random())/100);
-    else valor = distribucionNormal(((float)random())/100,((float)random())/100);
+    else valor = distribucionNormal();
 
     return valor;
 }
@@ -342,13 +343,17 @@ float Simulacion::distribucionUniforme(float random)
     return ( random * (quanSims/2) );
 }
 
-float Simulacion::distribucionNormal(float random1, float random2)
+float Simulacion::distribucionNormal()
 {
-    float resultado = ( (-2 * log(random1)) * 1/2 * (cos(2 * M_PI * random2)) );
+    //float resultado = ( (-2 * log(random1)) * 1/2 * (cos(2 * M_PI * random2)) );
 
-    if(resultado > 0) return resultado;
+    //if(resultado > 0) return resultado;
 
-    return ( (-2 * log(random1)) * 1/2 * (sin(2 * M_PI * random2)) );
+    //return ( (-2 * log(random1)) * 1/2 * (sin(2 * M_PI * random2)) );
+    float acumulado = 0;
+    for(int i = 1; i < 13; ++i)
+        acumulado = acumulado + ((float)random())/100;
+    return varianza * (acumulado - 6) + media;
 }
 
 float Simulacion::distribucionIO(float random)

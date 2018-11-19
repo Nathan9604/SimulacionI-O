@@ -17,6 +17,7 @@ void controller::simular(int numSim, int tiemSim, int quanSim, bool expon){
         this->connect( this->sim, &Simulacion::actNumCola, this, &controller::actNumCola );
         this->connect( this->sim, &Simulacion::actNumSal, this, &controller::actNumSal );
         this->connect( this->sim, &Simulacion::actNumColaIO, this, &controller::actNumColaIO );
+        this->connect( this->sim, &Simulacion::almacenarResultados, this, &controller::almacenarResultados );
 
         //Ejecuta la simulación y luego le saca las estádisticas.
         sim->start();
@@ -26,9 +27,6 @@ void controller::simular(int numSim, int tiemSim, int quanSim, bool expon){
 
         //Agrega la simulación al vector de simulaciones.
         sims.append(sim);
-
-        QString h = "Prueba " + QString::number( i );
-        resultados.append(h);
     }
 
     //Promedia todas las simulaciones y las muestra en pantalla.
@@ -69,6 +67,17 @@ void controller::actNumSal(int numSal){
 
 void controller::actNumColaIO(int numColaIO){
     emit this->actualiceNumColaIO(numColaIO);
+}
+
+void controller::almacenarResultados(nodoEstadisticas * n){
+    resultados.append( "***************************************************");
+    resultados.append( "Tiempo promedio en colas " + QString::number(n->obtenerPromedioColas()) );
+    resultados.append( "Tiempo promedio del uso de CPU " + QString::number(n->obtenerPromedioCPU()));
+    resultados.append( "Tiempo promedio del uso de IO " + QString::number(n->obtenerPromedioIO()));
+    resultados.append( "Tiempo promedio Total en el sistema " + QString::number(n->obtenerPromedioTotalSistema()));
+    resultados.append( "***************************************************");
+
+    listaEstadisticas.append(n);
 }
 
 int controller::rowCount(const QModelIndex &parent) const
