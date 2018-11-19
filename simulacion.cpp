@@ -60,7 +60,7 @@ void Simulacion::correrSim(){
         emit this->actNumCola(colaListosCPU.size());
         emit this->actNumSal(colaSalida.size());
         emit this->actNumColaIO(colaListosDispositivos.size());
-printf("Reloj %9.6f evento%d\n",reloj, evento);
+//printf("Reloj %9.6f evento%d\n",reloj, evento);
         switch(evento)
         {
             case 1:
@@ -229,30 +229,54 @@ void Simulacion::evento2(){
 
 //Evnento: Salida de un proceso de la cola de dispositivos
 void Simulacion::evento3(){
-    proceso * p = new proceso();
+    //proceso * p = new proceso();
     //manejadorEventos->indicarProximaSalidaIO(reloj + 10,p);
     double tiempoCPUactual;
     double tiempoIOactual;
 
     //Obtiene el proceso sacado
-    proceso * procesoListoDispositivo;
+    //proceso * procesoListoDispositivo;
 
-    if(colaListosDispositivos.size() > 0)
-    {
-        procesoListoDispositivo = colaListosDispositivos.front();
-
+    //if(colaListosDispositivos.size() > 0)
+    //{
         //Elimina el proceso de la cola de dispositivos
-        colaListosDispositivos.dequeue();
+        //procesoListoDispositivo = colaListosDispositivos.dequeue();
+
+    //Decide que hacer con el proceso que salio de la cola de dispositivos
+printf("llegue");
+    if(CPULibre)
+    {
+        //Avisa que este proceso sera el proximo en salir del cpu
+        tiempoCPUactual = reloj + (quanSims/2) + distribucionUniforme( ((float)random())/100 );
+        manejadorEventos->indicarProximaSalidaCpu(tiempoCPUactual, manejadorEventos->obtenerProximoProcesoIO());
+
+        //Actualiza estadísticas de proceso que va a salir de CPU
+        //procesoListoDispositivo->sumarTiempoCPU(tiempoCPUactual - reloj);
+        //procesoListoDispositivo->sumarTiempoCola(reloj);
+        manejadorEventos->obtenerProximoProcesoCPU()->sumarPromedioTotalSistema(
+                    manejadorEventos->obtenerProximoProcesoCPU()->obtenerTiempoCPU() +
+                    manejadorEventos->obtenerProximoProcesoCPU()->obtenerTiempoCola());
+
+        CPULibre = false;
+        //emit this->actCpu(CPULibre);
+    }
+    else //Manda el proceso a la cola de listos
+    {
+        colaListosCPU.enqueue(manejadorEventos->obtenerProximoProcesoIO());
+        //emit this->actNumCola(colaListosCPU.size());
+        //Actualiza entrada en cola de proceso
+        //procesoListoDispositivo->actualizarEntradaCola(reloj);
+    }
 
         //Si queda un proceso en la cola de dispositivos, entonces avisa al manejador de eventos
         if(colaListosDispositivos.size() > 0)
-        {
+        {            
             tiempoIOactual = reloj + distribucionIO( ((float)random())/100 );
            //Obtiene el proceso que esta de primero en la lista
-           manejadorEventos->indicarProximaSalidaIO(tiempoIOactual, colaListosDispositivos.front());
+           manejadorEventos->indicarProximaSalidaIO(tiempoIOactual, colaListosDispositivos.dequeue());
            //Estadíticas de proceso que acaba de salir de IO
-           colaListosDispositivos.front()->sumarTiempoDispositivo(tiempoIOactual - reloj);
-           colaListosDispositivos.front()->sumarTiempoCola(reloj);
+           //colaListosDispositivos.front()->sumarTiempoDispositivo(tiempoIOactual - reloj);
+           //colaListosDispositivos.front()->sumarTiempoCola(reloj);
            manejadorEventos->obtenerProximoProcesoCPU()->sumarPromedioTotalSistema(
                        manejadorEventos->obtenerProximoProcesoCPU()->obtenerTiempoIO() +
                        manejadorEventos->obtenerProximoProcesoCPU()->obtenerTiempoCola());
@@ -264,36 +288,12 @@ void Simulacion::evento3(){
         }
 
 
-        //Decide que hacer con el proceso que salio de la cola de dispositivos
 
-        if(CPULibre)
-        {
-            //Avisa que este proceso sera el proximo en salir del cpu
-            tiempoCPUactual = reloj + (quanSims/2) + distribucionUniforme( ((float)random())/100 );
-            manejadorEventos->indicarProximaSalidaCpu(tiempoCPUactual, procesoListoDispositivo);
-
-            //Actualiza estadísticas de proceso que va a salir de CPU
-            procesoListoDispositivo->sumarTiempoCPU(tiempoCPUactual - reloj);
-            procesoListoDispositivo->sumarTiempoCola(reloj);
-            manejadorEventos->obtenerProximoProcesoCPU()->sumarPromedioTotalSistema(
-                        manejadorEventos->obtenerProximoProcesoCPU()->obtenerTiempoCPU() +
-                        manejadorEventos->obtenerProximoProcesoCPU()->obtenerTiempoCola());
-
-            CPULibre = false;
-            //emit this->actCpu(CPULibre);
-        }
-        else //Manda el proceso a la cola de listos
-        {
-            colaListosCPU.enqueue(procesoListoDispositivo);
-            //emit this->actNumCola(colaListosCPU.size());
-            //Actualiza entrada en cola de proceso
-            procesoListoDispositivo->actualizarEntradaCola(reloj);
-        }
-    }
+    /*}
     else
     {
         manejadorEventos->vaciarSalidaIO();
-    }
+    }*/
 
 
 }
