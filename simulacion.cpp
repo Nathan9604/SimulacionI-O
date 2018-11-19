@@ -154,7 +154,7 @@ void Simulacion::evento2(){
                 manejadorEventos->indicarProximaSalidaCpu(tiempoCPUactual, colaListosCPU.dequeue() );
 
                 //Se suman estadísticas de tiempo en cola, tiempo de uso de la CPU, y tiempo total en el sistema del programa
-                manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCPU(tiempoCPUactual);
+                manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCPU(tiempoCPUactual - reloj);
                 manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCola(reloj);
                 manejadorEventos->obtenerProximoProcesoCPU()->sumarPromedioTotalSistema(
                 manejadorEventos->obtenerProximoProcesoCPU()->obtenerTiempoCPU() +
@@ -165,7 +165,7 @@ void Simulacion::evento2(){
                 manejadorEventos->indicarProximaSalidaCpu(tiempoCPUactual, manejadorEventos->obtenerProximoProcesoCPU() );
 
                 //Se suma estadística de tiempo de uso de la CPU y tiempo total en el sistema del programa
-                manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCPU(tiempoCPUactual);
+                manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCPU(tiempoCPUactual - reloj);
                 manejadorEventos->obtenerProximoProcesoCPU()->sumarPromedioTotalSistema(
                 manejadorEventos->obtenerProximoProcesoCPU()->obtenerTiempoCPU());
             }
@@ -178,7 +178,7 @@ void Simulacion::evento2(){
                 //emit this->actNumCola(colaListosCPU.size());
 
                 //Se suman estadísticas de tiempo en cola, tiempo de uso de la CPU, y tiempo total en el sistema del programa
-                manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCPU(tiempoCPUactual);
+                manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCPU(tiempoCPUactual - reloj);
                 manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCola(reloj);
                 manejadorEventos->obtenerProximoProcesoCPU()->sumarPromedioTotalSistema(
                             manejadorEventos->obtenerProximoProcesoCPU()->obtenerTiempoCPU() +
@@ -194,7 +194,7 @@ void Simulacion::evento2(){
                 tiempoIOactual = reloj + distribucionIO( ((float)random())/100 );
                 manejadorEventos->indicarProximaSalidaIO(tiempoIOactual, manejadorEventos->obtenerProximoProcesoCPU());
                                                                                            //no es próximo proceso IO?
-                manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoDispositivo(tiempoIOactual);
+                manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoDispositivo(tiempoIOactual - reloj);
             }
             else{
                 manejadorEventos->obtenerProximoProcesoCPU()->actualizarEntradaCola(reloj);
@@ -210,7 +210,7 @@ void Simulacion::evento2(){
                 //emit this->actNumCola(colaListosCPU.size());
 
                 //Se suman estadísticas de tiempo en cola, tiempo de uso de la CPU, y tiempo total en el sistema del programa
-                manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCPU(tiempoCPUactual);
+                manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCPU(tiempoCPUactual - reloj);
                 manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCola(reloj);
                 manejadorEventos->obtenerProximoProcesoCPU()->sumarPromedioTotalSistema(
                 manejadorEventos->obtenerProximoProcesoCPU()->obtenerTiempoCPU() +
@@ -247,9 +247,9 @@ void Simulacion::evento3(){
         //Si queda un proceso en la cola de dispositivos, entonces avisa al manejador de eventos
         if(colaListosDispositivos.size() > 0)
         {
-            tiempoIOactual = distribucionIO( ((float)random())/100 );
+            tiempoIOactual = reloj + distribucionIO( ((float)random())/100 );
            //Obtiene el proceso que esta de primero en la lista
-           manejadorEventos->indicarProximaSalidaIO(reloj + tiempoIOactual, colaListosDispositivos.front());
+           manejadorEventos->indicarProximaSalidaIO(tiempoIOactual, colaListosDispositivos.front());
            //Estadíticas de proceso que acaba de salir de IO
            colaListosDispositivos.front()->sumarTiempoDispositivo(tiempoIOactual - reloj);
            colaListosDispositivos.front()->sumarTiempoCola(reloj);
@@ -284,7 +284,7 @@ void Simulacion::evento3(){
         }
         else //Manda el proceso a la cola de listos
         {
-            colaListosCPU.push_front(procesoListoDispositivo);
+            colaListosCPU.enqueue(procesoListoDispositivo);
             //emit this->actNumCola(colaListosCPU.size());
             //Actualiza entrada en cola de proceso
             procesoListoDispositivo->actualizarEntradaCola(reloj);
@@ -304,6 +304,7 @@ nodoEstadisticas* Simulacion::estadisticasSim()
     tiempoPromedioColas = 0;
     ocupacionServidor = 0;
     coeficienteEficiencia = 0;
+    tiempoPromedioTotalSistema = 0;
     QList<proceso*>::iterator i;
     for (i = colaSalida.begin(); i != colaSalida.end(); i++){
         p = *i;
