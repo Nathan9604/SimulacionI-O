@@ -9,6 +9,7 @@ protected:
     double entradaCola;
     double tiempoCPU;
     double tiempoDispositivo;
+    double tiempoPromedioTotalSistema;
 public:
     proceso();
     ~proceso();
@@ -16,7 +17,9 @@ public:
     void actualizarEntradaCola(double reloj);
     void sumarTiempoCPU(double cantidad);
     void sumarTiempoDispositivo(double cantidad);
+    void sumarPromedioTotalSistema(double cantidad);
 
+    double obtenerPromedioTotalSistema();
     double obtenerTiempoCPU();
     double obtenerTiempoIO();
     double obtenerTiempoCola();

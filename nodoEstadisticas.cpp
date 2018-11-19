@@ -27,6 +27,11 @@ void nodoEstadisticas::asignarPromedioIO(double nuevo)
     tiempoPromedioUsoIO = nuevo;
 }
 
+void nodoEstadisticas::asignarPromedioTotalSistema(double nuevo)
+{
+    tiempoPromedioTotalSistema = nuevo;
+}
+
 double nodoEstadisticas::obtenerPromedioColas()
 {
     return tiempoPromedioColas;
@@ -40,4 +45,9 @@ double nodoEstadisticas::obtenerPromedioCPU()
 double nodoEstadisticas::obtenerPromedioIO()
 {
     return tiempoPromedioUsoIO;
+}
+
+double nodoEstadisticas::obtenerPromedioTotalSistema()
+{
+    return tiempoPromedioTotalSistema;
 }

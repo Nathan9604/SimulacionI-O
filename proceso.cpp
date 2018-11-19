@@ -43,3 +43,13 @@ double proceso::obtenerTiempoCola()
 {
     return tiempoCola;
 }
+
+double proceso::obtenerPromedioTotalSistema()
+{
+    return tiempoPromedioTotalSistema;
+}
+
+void proceso::sumarPromedioTotalSistema(double cantidad)
+{
+    tiempoPromedioTotalSistema += cantidad;
+}

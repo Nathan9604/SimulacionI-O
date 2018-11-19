@@ -24,6 +24,7 @@ class Simulacion : public QThread
 
         //Estadisticas de la simulacion actual
         double ocupacionServidor;
+        double tiempoPromedioTotalSistema;
         double coeficienteEficiencia;
         double tiempoPromedioUsoCpu;
         double tiempoPromedioUsoIO;
