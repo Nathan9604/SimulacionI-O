@@ -111,8 +111,6 @@ void Simulacion::correrSim(){
     n->asignarPromedioTotalSistema(tiempoPromedioTotalSistema);
     n->asignarCoeficienteEficiencia(coeficienteEficiencia);
     n->asignarOcupacionServidor(ocupacionServidor);
-    //listaEstadisticas.append(n);
-    //printf("PromedioColas = %lf",n->obtenerPromedioColas());
 
     emit almacenarResultados(n);
 }
@@ -132,9 +130,11 @@ void Simulacion::evento1()
         manejadorEventos->obtenerProximoProcesoCPU()->obtenerTiempoCPU());
     }
     else{
+        //Se envía a cola de listos para CPU
         colaListosCPU.enqueue(p);
         p->actualizarEntradaCola(reloj);
     }
+    //Se calcula próximo arribo
     float proximoArribo = eleccionDistribucion();
     manejadorEventos->indicarProximoArribo(reloj + proximoArribo);
 }

@@ -31,6 +31,7 @@ void controller::simular(int numSim, int tiemSim, int quanSim, bool expon){
     this->endResetModel();
 }
 
+//Se calculan las estadísticas de todas las corridas
 void controller::promSims(){
     QList<nodoEstadisticas*>::iterator i;
     nodoEstadisticas *n;
