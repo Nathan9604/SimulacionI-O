@@ -1,23 +1,3 @@
-simulacion.cpp
-Tipo
-C++
-Tamaño
-16 KB (16.474 bytes)
-Espacio usado
-16 KB (16.474 bytes)
-Ubicación
-Nachos
-Propietario
-yo
-Modificado
-22:25 por mí
-Abierto
-22:26 por mí
-Creado el
-22:25 con Google Drive Web
-Añadir descripción
-Los lectores pueden descargar
-
 #include "simulacion.h"
 #include <stdlib.h>
 #include <time.h>
