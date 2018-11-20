@@ -17,6 +17,7 @@ class controller : public QAbstractListModel
         QVector<Simulacion *> sims;
         QList<nodoEstadisticas *> listaEstadisticas;
         Simulacion *sim;
+        int counter;
 
         //Estadisticas de todas las simulaciones. Esto no ocupa contadores ya que dichos contadores equivalen a la cantidad total de simulaciones
         double ocupacionServidorTotal;

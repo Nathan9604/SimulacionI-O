@@ -6,6 +6,7 @@ controller::controller(QObject *parent)
 }
 
 void controller::simular(int numSim, int tiemSim, int quanSim, bool expon){
+    counter = numSim - 1;
 
     for(int i = 0; i < numSim; i++){
         sim = new Simulacion(numSim, tiemSim, quanSim, expon);
@@ -23,20 +24,15 @@ void controller::simular(int numSim, int tiemSim, int quanSim, bool expon){
         sim->start();
         sim->estadisticasSim();
 
-        //Agrege las estádisticas a la lista de despliegue
+        // Destruye cada hilo menos el último.
+        //if(i != numSim-1) delete sim;
 
-        //Agrega la simulación al vector de simulaciones.
-        sims.append(sim);
-
-        /*QString h = "Corrida " + QString::number( i ) + "\n" + "Tiempo promedio total programa en el sistema = " + QString::number(n->obtenerPromedioTotalSistema()) +
-        "\n" + "Tiempo promedio programa en CPU = " + QString::number(n->obtenerPromedioCPU()) + "\n" + "Ocupación del servidor = " + QString::number(n->obtenerOcupacionServidor()) + "\n" +
-        "Tiempo de uso promedio de dispositivo E/S = " + QString::number(n->obtenerPromedioIO()) + "\n" + "Promedio tiempo en colas = " + QString::number(n->obtenerPromedioColas()) + "\n" +
-        "Coeficiente de eficiencia = " + QString::number(n->obtenerCoeficienteEficiencia()) + "\n";*/
-        //resultados.append(h);
+        // Espera al último hilo.
+        //sim->wait();
     }
 
     //Promedia todas las simulaciones y las muestra en pantalla.
-    this->promSims();
+    //this->promSims();
 
     this->filasLeidas = 0;
     this->endResetModel();
@@ -48,6 +44,8 @@ void controller::promSims(){
     nodoEstadisticas *n;
     resultados.append( "***************************************************");
     resultados.append("Promedio total de la simulación");
+    //int bla = listaEstadisticas.size();
+
     for (i = listaEstadisticas.begin(); i != listaEstadisticas.end(); i++){
         n = *i;
         tiempoPromedioUsoCpuTotal += n->obtenerPromedioCPU();
@@ -106,6 +104,9 @@ void controller::almacenarResultados(nodoEstadisticas * n){
     resultados.append( "***************************************************");
 
     listaEstadisticas.append(n);
+
+    if(counter == 0) promSims();
+    else --counter;
 }
 
 int controller::rowCount(const QModelIndex &parent) const

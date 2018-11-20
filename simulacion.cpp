@@ -243,7 +243,7 @@ void Simulacion::evento3(){
         //procesoListoDispositivo = colaListosDispositivos.dequeue();
 
     //Decide que hacer con el proceso que salio de la cola de dispositivos
-printf("llegue");
+
     if(CPULibre)
     {
         //Avisa que este proceso sera el proximo en salir del cpu
