@@ -29,6 +29,7 @@ private slots:
     void actualiceNumCola(int numCola);
     void actualiceNumSal(int numSal);
     void actualiceNumColaIO(int numColaIO);
+    void mostrarResultados();
 
 private:
     Ui::MainWindow *ui;

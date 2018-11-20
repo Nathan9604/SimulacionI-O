@@ -5,11 +5,13 @@ controller::controller(QObject *parent)
 {
 }
 
+// Encargado de iniciar las simulaciones
 void controller::simular(int numSim, int tiemSim, int quanSim, bool expon){
-    counter = numSim - 1;
+    simulacionesRestantes = numSim - 1; // Cantidad de simulaciones restantes para desplegar valores globales
 
     for(int i = 0; i < numSim; i++){
         sim = new Simulacion(numSim, tiemSim, quanSim, expon);
+
         // Realiza la conección entre simulación y el controller.
         this->connect( this->sim, &Simulacion::actReloj, this, &controller::actReloj );
         this->connect( this->sim, &Simulacion::actEvento, this, &controller::actEvento );
@@ -23,20 +25,10 @@ void controller::simular(int numSim, int tiemSim, int quanSim, bool expon){
         //Ejecuta la simulación y luego le saca las estádisticas.
         sim->start();
         sim->estadisticasSim();
-
-        // Destruye cada hilo menos el último.
-        //if(i != numSim-1) delete sim;
-
-        // Espera al último hilo.
-        //sim->wait();
     }
 
-    //Promedia todas las simulaciones y las muestra en pantalla.
-    //this->promSims();
-
-    this->filasLeidas = 0;
+    this->filasLeidas = 0; // Cantidad de filas leídas para ser mostradas en pantalla
     this->endResetModel();
-    //RECORDAR ELIMINAR SIMS
 }
 
 void controller::promSims(){
@@ -44,7 +36,6 @@ void controller::promSims(){
     nodoEstadisticas *n;
     resultados.append( "***************************************************");
     resultados.append("Promedio total de la simulación");
-    //int bla = listaEstadisticas.size();
 
     for (i = listaEstadisticas.begin(); i != listaEstadisticas.end(); i++){
         n = *i;
@@ -66,36 +57,46 @@ void controller::promSims(){
             "Tiempo de uso promedio de dispositivo E/S = " + QString::number(tiempoPromedioUsoIOTotal) + "\n" + "Promedio tiempo en colas = " + QString::number(tiempoPromedioColasTotal) + "\n" +
             "Coeficiente de eficiencia = " + QString::number(coeficienteEficienciaTotal) + "\n");
     resultados.append( "***************************************************");
+
+    emit mostrarResultados();
 }
 
+// Envía actualización valor reloj
 void controller::actReloj(float reloj){
     emit this->actualiceReloj(reloj);
 }
 
+// Envía actualización valor evento
 void controller::actEvento(int evento){
     emit this->actualiceEvento(evento);
 }
 
+// Envía actualización valor CPU
 void controller::actCpu(bool usoCpu){
     emit this->actualiceCpu(usoCpu);
 }
 
+// Envía actualización valor IO
 void controller::actIo(bool usoIo){
     emit this->actualiceIo(usoIo);
 }
 
+// Envía actualización valor cantidad de procesos en cola de listos
 void controller::actNumCola(int numCola){
     emit this->actualiceNumCola(numCola);
 }
 
+// Envía actualización valor cantidad de procesos en cola de salida
 void controller::actNumSal(int numSal){
     emit this->actualiceNumSal(numSal);
 }
 
+// Envía actualización valor cantidad de procesos en cola de IO
 void controller::actNumColaIO(int numColaIO){
     emit this->actualiceNumColaIO(numColaIO);
 }
 
+// Despliega en pantalla las estadísticas de cada simulación
 void controller::almacenarResultados(nodoEstadisticas * n){
     resultados.append("Tiempo promedio total programa en el sistema = " + QString::number(n->obtenerPromedioTotalSistema()) +
             "\n" + "Tiempo promedio programa en CPU = " + QString::number(n->obtenerPromedioCPU()) + "\n" + "Ocupación del servidor = " + QString::number(n->obtenerOcupacionServidor()) + "\n" +
@@ -105,17 +106,18 @@ void controller::almacenarResultados(nodoEstadisticas * n){
 
     listaEstadisticas.append(n);
 
-    if(counter == 0) promSims();
-    else --counter;
+    if(simulacionesRestantes == 0) promSims();
+    else --simulacionesRestantes;
 }
 
+// Cuenta la cantidad de filas leídas para desplegar en la ventana
 int controller::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return this->filasLeidas;
 }
 
-
+// Carga los datos en la ventana
 QVariant controller::data(const QModelIndex &index, int role) const
 {
     if ( ! index.isValid() )
@@ -134,14 +136,14 @@ QVariant controller::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-
+// Pregunta si hay filas en la lista que no han sido desplegadas en la ventana
 bool controller::canFetchMore(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return this->filasLeidas < resultados.count();
 }
 
-
+// Permite seguir leyendo de la lista para desplegar en la ventana
 void controller::fetchMore(const QModelIndex &parent)
 {
     Q_UNUSED(parent);

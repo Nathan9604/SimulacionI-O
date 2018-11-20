@@ -14,6 +14,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// Botón de aceptar
 void MainWindow::on_OkButtom_2_accepted()
 {
     if( ui->numSims->value() >= 1 && ui->tiemSims->value() >= 1 && ui->quanSims->value() >= 1
@@ -26,6 +27,8 @@ void MainWindow::on_OkButtom_2_accepted()
 
         // Crea y vincula las señales.
         this->con = new controller(this);
+
+        // Conección de signals y sloths
         this->connect( this->con, &controller::actualiceReloj, this, &MainWindow::actualiceReloj );
         this->connect( this->con, &controller::actualiceEvento, this, &MainWindow::actualiceEvento );
         this->connect( this->con, &controller::actualiceCpu, this, &MainWindow::actualiceCpu );
@@ -33,6 +36,8 @@ void MainWindow::on_OkButtom_2_accepted()
         this->connect( this->con, &controller::actualiceNumCola, this, &MainWindow::actualiceNumCola );
         this->connect( this->con, &controller::actualiceNumSal, this, &MainWindow::actualiceNumSal );
         this->connect( this->con, &controller::actualiceNumColaIO, this, &MainWindow::actualiceNumColaIO );
+        this->connect( this->con, &controller::mostrarResultados, this, &MainWindow::mostrarResultados );
+
         // Llamado al programa
         this->con->simular( ui->numSims->value(), ui->tiemSims->value(), ui->quanSims->value(), ui->exponencial->isChecked() );
 
@@ -54,6 +59,7 @@ void MainWindow::on_OkButtom_2_accepted()
     }
 }
 
+// Botón de cancelar
 void MainWindow::on_OkButtom_2_rejected()
 {
     // Inicialice los valores de nuevo.
@@ -62,14 +68,17 @@ void MainWindow::on_OkButtom_2_rejected()
     ui->quanSims->setValue(1);
 }
 
+// Actualiza reloj en pantalla
 void MainWindow::actualiceReloj(float reloj){
     ui->reloj->setText( QString::number(reloj) );
 }
 
+// Actualiza el número de evento en pantalla
 void MainWindow::actualiceEvento(int evento){
     ui->numEvRes->setText( QString::number(evento) );
 }
 
+// Actualiza el uso de CPU en pantalla
 void MainWindow::actualiceCpu(bool cpuLibre){
     if(cpuLibre == false){
         ui->cpuVal->setText("Ocupado");
@@ -81,6 +90,7 @@ void MainWindow::actualiceCpu(bool cpuLibre){
     }
 }
 
+// Actualiza el uso de IO en pantalla
 void MainWindow::actualiceIo(bool ioLibre){
     if(ioLibre == false){
         ui->ioVal->setText("Ocupado");
@@ -92,14 +102,22 @@ void MainWindow::actualiceIo(bool ioLibre){
     }
 }
 
+// Actualiza la cantidad de procesos en cola de listos
 void MainWindow::actualiceNumCola(int numCola){
     ui->numCol->setText( QString::number(numCola) );
 }
 
+// Actualiza la cantidad de procesos que salieron del sistema
 void MainWindow::actualiceNumSal(int numSal){
     ui->numTer->setText( QString::number(numSal) );
 }
 
+// Actualiza la cantidad de procesos en cola de IO
 void MainWindow::actualiceNumColaIO(int numColaIO){
     ui->numColIO->setText( QString::number(numColaIO) );
+}
+
+// Muestra resultados al finalizar las simulaciones
+void MainWindow::mostrarResultados(){
+    ui->tabla->setCurrentIndex(2);
 }

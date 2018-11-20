@@ -4,11 +4,13 @@
 
 Simulacion::Simulacion(int numSim, int tiemSim, int quanSim, bool expon)
 {
+    // Carga valores en variables
     numSims = numSim;
     tiemSims = (float)tiemSim;
     quanSims = quanSim;
     exp = expon;
 
+    // Establece media y varianza dependiendo de la distribución elegida
     if(exp == true){
         media = 30;
         varianza = 1;
@@ -37,6 +39,7 @@ Simulacion::Simulacion(int numSim, int tiemSim, int quanSim, bool expon)
 
 }
 
+// Inicio del hilo
 void Simulacion::run(){
     correrSim();
 }
@@ -51,8 +54,10 @@ void Simulacion::correrSim(){
 
     evento1();
     do{
+        // Pide el próximo evento
         evento = manejadorEventos->ObtenerEventoMasProximo();
 
+        // Actualiza los datos de la pantalla
         emit this->actReloj(reloj);
         emit this->actCpu(CPULibre);
         emit this->actIo(IOLibre);
@@ -60,7 +65,8 @@ void Simulacion::correrSim(){
         emit this->actNumCola(colaListosCPU.size());
         emit this->actNumSal(colaSalida.size());
         emit this->actNumColaIO(colaListosDispositivos.size());
-//printf("Reloj %9.6f evento%d\n",reloj, evento);
+
+        // llamado de los eventos
         switch(evento)
         {
             case 1:
@@ -74,6 +80,7 @@ void Simulacion::correrSim(){
                 break;
         }
 
+        // Valor del reloj en el próximo evento
         reloj = manejadorEventos->obtenerProximoTiempo();
     }
     while(reloj <= tiemSims);
@@ -133,23 +140,24 @@ void Simulacion::evento1()
 }
 
 void Simulacion::evento2(){
-    //manejadorEventos->proximoSalirCpu->sumarTiempoCola( reloj - manejadorEventos->proximoSalirCpu->entradaCola );
     double tiempoCPUactual;
     double tiempoIOactual;
-    int siguienteEvento = random();
+    int siguienteEvento = random(); // Averigua si el proceso sale, va a IO o espera por CPU
 
+    // Establece el valor para el switch
     if(siguienteEvento < 50) siguienteEvento = 1;
     else if (siguienteEvento >= 50 && siguienteEvento < 70) siguienteEvento = 2;
          else siguienteEvento = 3;
 
     switch(siguienteEvento){
         case 1: // Va para CPU
+            // Hay alguien en la cola de CPU
             if(colaListosCPU.size() > 0){
+                // Guarda el proceso del CPU en la cola de espera por CPU
                 manejadorEventos->obtenerProximoProcesoCPU()->actualizarEntradaCola(reloj);
                 colaListosCPU.append(manejadorEventos->obtenerProximoProcesoCPU());
 
-                //emit this->actNumCola(colaListosCPU.size());
-
+                // Establece el tiempo en el que el nuevo proceso usará el CPU y se lo asigna
                 tiempoCPUactual = reloj + (quanSims/2) + distribucionUniforme( ((float)random())/100 );
                 manejadorEventos->indicarProximaSalidaCpu(tiempoCPUactual, colaListosCPU.dequeue() );
 
@@ -161,6 +169,7 @@ void Simulacion::evento2(){
                 manejadorEventos->obtenerProximoProcesoCPU()->obtenerTiempoCola());
             }
             else{
+                // Como no hay nadie en cola, el proceso puede volver a usar la cola, se define el tiempo de el nuevo uso
                 tiempoCPUactual = reloj + (quanSims/2) + distribucionUniforme( ((float)random())/100 );
                 manejadorEventos->indicarProximaSalidaCpu(tiempoCPUactual, manejadorEventos->obtenerProximoProcesoCPU() );
 
@@ -172,10 +181,28 @@ void Simulacion::evento2(){
             break;
 
         case 2: // Va para IO
+
+            // Si hay alguien en el dispositivo de IO envie el proceso a cola, sino dejelo usar el dispositivo
+            if(IOLibre == true){
+                IOLibre = false;
+
+                // Se le asigna el tiempo de uso de IO y lo deja usarlo
+                tiempoIOactual = reloj + distribucionIO( ((float)random())/100 );
+                manejadorEventos->indicarProximaSalidaIO(tiempoIOactual, manejadorEventos->obtenerProximoProcesoCPU());
+
+                manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoDispositivo(tiempoIOactual - reloj);
+            }
+            else{
+                // Como el dispositivo está ocupado, envielo a la cola de IO
+                manejadorEventos->obtenerProximoProcesoCPU()->actualizarEntradaCola(reloj);
+                colaListosDispositivos.enqueue(manejadorEventos->obtenerProximoProcesoCPU());
+            }
+
+            // Si hay alguien esperando por CPU asigneselo antes de enviar el proceso a cola de IO o a IO
             if(colaListosCPU.size() > 0){
+                // Se establece el tiempo en el que el nuevo proceso se le permite usar el CPU y se le asigna
                 tiempoCPUactual = reloj + (quanSims/2) + distribucionUniforme( ((float)random())/100 );
                 manejadorEventos->indicarProximaSalidaCpu(tiempoCPUactual, colaListosCPU.dequeue() );
-                //emit this->actNumCola(colaListosCPU.size());
 
                 //Se suman estadísticas de tiempo en cola, tiempo de uso de la CPU, y tiempo total en el sistema del programa
                 manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCPU(tiempoCPUactual - reloj);
@@ -185,31 +212,20 @@ void Simulacion::evento2(){
                             manejadorEventos->obtenerProximoProcesoCPU()->obtenerTiempoCola());
             }
             else{
+                // Como no hay nadie en cola el CPU se pasa a libre
                 CPULibre = true;
-                //emit this->actCpu(CPULibre);
-            }
-
-            if(IOLibre == true){
-                IOLibre = false;
-                tiempoIOactual = reloj + distribucionIO( ((float)random())/100 );
-                manejadorEventos->indicarProximaSalidaIO(tiempoIOactual, manejadorEventos->obtenerProximoProcesoCPU());
-                                                                                           //no es próximo proceso IO?
-                manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoDispositivo(tiempoIOactual - reloj);
-            }
-            else{
-                manejadorEventos->obtenerProximoProcesoCPU()->actualizarEntradaCola(reloj);
-                colaListosDispositivos.enqueue(manejadorEventos->obtenerProximoProcesoCPU());
-                //emit this->actNumColaDis( colaListosDispositivos.size() );
             }
             break;
 
         case 3: // Va para Salida
+
+            // Si hay alguien en la cola de CPU envielo al CPU
             if(colaListosCPU.size() > 0){
+                // Se define el tiempo de uso de CPU y se le asigna
                 tiempoCPUactual = reloj + (quanSims/2) + distribucionUniforme( ((float)random())/100 );
                 manejadorEventos->indicarProximaSalidaCpu(tiempoCPUactual, colaListosCPU.dequeue() );
-                //emit this->actNumCola(colaListosCPU.size());
 
-                //Se suman estadísticas de tiempo en cola, tiempo de uso de la CPU, y tiempo total en el sistema del programa
+                // Se suman estadísticas de tiempo en cola, tiempo de uso de la CPU, y tiempo total en el sistema del programa
                 manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCPU(tiempoCPUactual - reloj);
                 manejadorEventos->obtenerProximoProcesoCPU()->sumarTiempoCola(reloj);
                 manejadorEventos->obtenerProximoProcesoCPU()->sumarPromedioTotalSistema(
@@ -217,9 +233,11 @@ void Simulacion::evento2(){
                 manejadorEventos->obtenerProximoProcesoCPU()->obtenerTiempoCola());
             }
             else{
-                //No hace falta sacar lo que va a durar el proceso actual en CPU?
+                // Como no hay nadie en cola de CPU deje el CPU libre
                 CPULibre = true;
             }
+
+            // Envie el proceso a la cola de salida
             colaSalida.enqueue(manejadorEventos->obtenerProximoProcesoCPU());
             break;
     }
@@ -333,16 +351,16 @@ nodoEstadisticas* Simulacion::estadisticasSim()
     n->asignarPromedioTotalSistema(tiempoPromedioTotalSistema);
     n->asignarCoeficienteEficiencia(coeficienteEficiencia);
     n->asignarOcupacionServidor(ocupacionServidor);
-    //listaEstadisticas.append(n);
-    printf("PromedioColas = %lf",n->obtenerPromedioColas());
     return n;
 }
 
+// Devuelve un valor random de 0 a 99
 int Simulacion::random()
 {
     return rand() % 100;
 }
 
+// Decide cual de las dos distribuciones ejecutar para el arribo de procesos
 float Simulacion::eleccionDistribucion(){
     float valor = 0;
 
@@ -352,11 +370,13 @@ float Simulacion::eleccionDistribucion(){
     return valor;
 }
 
+// Generar un valor para una distribución exponencial
 float Simulacion::distribucionExponencial(float random)
 {
     return ( (- log(1-random)) / media);
 }
 
+// Generar un valor para una distribución uniforme
 //( random * ( quanSims/2 - 0) + 0 ), a = 0 y b = quanSims/2
 //( random * (quanSims/2) )
 float Simulacion::distribucionUniforme(float random)
@@ -364,19 +384,16 @@ float Simulacion::distribucionUniforme(float random)
     return ( random * (quanSims/2) );
 }
 
+// Generar un valor para una distribución normal por teorema del límite central con K = 12
 float Simulacion::distribucionNormal()
 {
-    //float resultado = ( (-2 * log(random1)) * 1/2 * (cos(2 * M_PI * random2)) );
-
-    //if(resultado > 0) return resultado;
-
-    //return ( (-2 * log(random1)) * 1/2 * (sin(2 * M_PI * random2)) );
     float acumulado = 0;
     for(int i = 1; i < 13; ++i)
         acumulado = acumulado + ((float)random())/100;
     return varianza * (acumulado - 6) + media;
 }
 
+// Generar un valor para la distribución correspondiente al IO
 float Simulacion::distribucionIO(float random)
 {
     return 20 * sqrt(3 * random + 1);

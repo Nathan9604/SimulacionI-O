@@ -12,13 +12,13 @@ class ManejadorEventos
 protected:
 
     //Indica ncuales son los proximos eventos a salir
-    proceso * proximoSalirIO;
-    proceso * proximoSalirCpu;
+    proceso * proximoSalirIO;   // Proceso en el dispositivo de IO
+    proceso * proximoSalirCpu;  // Proceso en CPU
 
     //Indican en que tiempo ocurriran los proximos eventos
-    float proximoArribo;
-    float proximaSalidaIO;
-    float proximaSalidaCpu;
+    float proximoArribo;        // Tiempo del proximo arribo
+    float proximaSalidaIO;      // Tiempo de próxima salida de IO
+    float proximaSalidaCpu;     // Tiempo de próxima salida de CPU
 
 public:
     ManejadorEventos();

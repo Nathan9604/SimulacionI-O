@@ -15,9 +15,9 @@ class Simulacion : public QThread
     Q_OBJECT
 
     protected:
-        int numSims;
-        float tiemSims;
-        int quanSims;
+        int numSims;    // Cantidad de simulaciones a realizar
+        float tiemSims; // Tiempo que dura la simulación
+        int quanSims;   // Cantidad del quantum de la simulación
         bool exp;       //¿Es exponencial?
         int varianza;
         int media;
@@ -36,7 +36,7 @@ class Simulacion : public QThread
         //Utilizadas para calcular proximo valor del reloj
         ManejadorEventos * manejadorEventos;
 
-        float reloj;
+        float reloj;    // Reloj de la simulación
         bool CPULibre;
         bool IOLibre;
 
